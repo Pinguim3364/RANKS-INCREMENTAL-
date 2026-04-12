@@ -21,19 +21,15 @@
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s, background 0.3s;
         }
 
-                        body {
-            margin: 0;
+        body { 
+            margin: 0; 
             background: #000;
-            height: auto;
-            min-height: 100vh;
-            overflow-y: auto;
             background-image: 
                 radial-gradient(1px 1px at 10% 10%, #fff, transparent),
                 radial-gradient(1px 1px at 50% 50%, #fff, transparent),
-                radial-gradient(1px 1px at 90% 90%, #fff, transparent);
-            background-attachment: fixed;
-        }
-
+                radial-gradient(2px 2px at 90% 20%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 30% 80%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 60%, #fff, transparent);
             background-size: 250px 250px;
             color: #fff; 
             font-family: 'Segoe UI', sans-serif; 
@@ -396,31 +392,39 @@
             document.getElementById('g-pts').innerText = formatValue(pts) + " PR";
             
             document.getElementById('uc-click').innerText = "Custo: " + formatValue(upg.clickCost) + " PR";
-            document.getElementById('uc-auto').            document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
-            document.getElementById('uc-x2click').innerText = upg.x2cOwned ? "ADQUIRIDO" : "Custo: " + formatValue(upg.x2cCost) + " PR";
-            document.getElementById('uc-x5click').innerText = upg.x5cOwned ? "ADQUIRIDO" : "Custo: " + formatValue(upg.x5cCost) + " PR";
-            document.getElementById('uc-x10click').innerText = upg.x10cOwned ? "ADQUIRIDO" : "Custo: " + formatValue(upg.x10cCost) + " PR";
-            document.getElementById('uc-x100click').innerText = upg.x100cOwned ? "ADQUIRIDO" : "Custo: " + formatValue(upg.x100cCost) + " PR";
-            document.getElementById('uc-x2auto').innerText = upg.x2aOwned ? "ADQUIRIDO" : "Custo: " + formatValue(upg.x2aCost) + " PR";
+                      document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
+            document.getElementById('up-click').className = pts >= upg.clickCost ? "up-card" : "up-card locked";
+            document.getElementById('up-auto').className = pts >= upg.autoCost ? "up-card" : "up-card locked";
 
-            let currentRank = rData[0];
-            rData.forEach(r => { if (pts >= r.v) currentRank = r; });
+            document.getElementById('uc-x2click').innerText = upg.x2cOwned ? "COMPRADO" : "Custo: 50k PR";
+            document.getElementById('up-x2click').className = (pts >= upg.x2cCost && !upg.x2cOwned) ? "up-card" : "up-card locked";
             
-            document.getElementById('ui-rank').innerText = "RANK: " + currentRank.pt.toUpperCase();
-            document.getElementById('ui-rank').style.color = currentRank.c;
-            document.getElementById('g-rank').innerText = "RANK: " + currentRank.pt.toUpperCase();
-            document.getElementById('g-rank').style.color = currentRank.c;
-            document.getElementById('rank-bar').style.backgroundColor = currentRank.c;
-            document.getElementById('rank-bar').style.boxShadow = "0 0 10px " + currentRank.c;
+            document.getElementById('uc-x5click').innerText = upg.x5cOwned ? "COMPRADO" : "Custo: 1M PR";
+            document.getElementById('up-x5click').className = (pts >= upg.x5cCost && !upg.x5cOwned) ? "up-card" : "up-card locked";
 
-            let nextRank = rData[rData.indexOf(currentRank) + 1] || currentRank;
-            let progress = currentRank === nextRank ? 100 : ((pts - currentRank.v) / (nextRank.v - currentRank.v)) * 100;
-            document.getElementById('rank-bar').style.width = Math.min(100, progress) + "%";
+            document.getElementById('uc-x10click').innerText = upg.x10cOwned ? "COMPRADO" : "Custo: 25M PR";
+            document.getElementById('up-x10click').className = (pts >= upg.x10cCost && !upg.x10cOwned) ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x100click').innerText = upg.x100cOwned ? "COMPRADO" : "Custo: 1B PR";
+            document.getElementById('up-x100click').className = (pts >= upg.x100cCost && !upg.x100cOwned) ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x2auto').innerText = upg.x2aOwned ? "COMPRADO" : "Custo: 100k PR";
+            document.getElementById('up-x2auto').className = (pts >= upg.x2aCost && !upg.x2aOwned) ? "up-card" : "up-card locked";
+
+            let cur = rData[0], next = rData[1];
+            for (let i=0; i<rData.length; i++) { if (pts >= rData[i].v) { cur = rData[i]; next = rData[i+1] || rData[i]; } }
+
+            const rTxt = "RANK: " + (lang === "PT" ? cur.pt : cur.en).toUpperCase();
+            document.getElementById('ui-rank').innerText = rTxt;
+            document.getElementById('ui-rank').style.color = cur.c;
+            document.getElementById('g-rank').innerText = rTxt;
+            document.getElementById('g-rank').style.color = cur.c;
+
+            let pct = (pts >= 10000000000) ? 100 : ((pts - cur.v) / (next.v - cur.v)) * 100;
+            document.getElementById('rank-bar').style.width = Math.min(100, pct) + "%";
         }
-
-        window.onload = load;
+        
+        load();
     </script>
 </body>
 </html>
-
-                
