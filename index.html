@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RANKS! - Neon Galaxy</title>
+    <style>
+        :root {
+            --neon-yellow: #ffd700;
+            --neon-blue: #00d4ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-purple: #bc13fe;
+            --red-off: #ff4444;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s, background 0.3s;
+        }
+
+        body { 
+            margin: 0; 
+            background: #000;
+            background-image: 
+                radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 90% 20%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 30% 80%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 60%, #fff, transparent);
+            background-size: 250px 250px;
+            color: #fff; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; overflow: hidden; 
+        }
+
+        .screen { 
+            text-align: center; width: 95%; max-width: 420px; height: 95vh; 
+            display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0;
+        }
+        .hidden { display: none !important; }
+
+        .top-bar {
+            background: rgba(0,0,0,0.9); border: 2px solid var(--neon-yellow);
+            border-radius: 20px; padding: 12px;
+            box-shadow: 0 0 15px var(--neon-yellow);
+            position: relative;
+        }
+        #ui-pts { font-size: 2.5rem; font-weight: 900; text-shadow: 0 0 10px #fff; display: block; }
+        #ui-rank { font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; }
+
+        .progress-container { width: 100%; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
+        #rank-bar { width: 0%; height: 100%; background: var(--neon-yellow); box-shadow: 0 0 8px var(--neon-yellow); transition: width 0.4s ease; }
+
+        .main-logo { font-size: 5rem; font-weight: 900; margin: 0; text-shadow: 0 0 30px var(--neon-yellow); line-height: 0.9; }
+        .tagline { color: var(--neon-yellow); font-size: 0.9rem; letter-spacing: 6px; font-weight: bold; }
+
+        .menu-grid { display: flex; flex-direction: column; gap: 10px; }
+        .btn-neon { 
+            background: #000; color: #fff; border: 2px solid #fff; 
+            padding: 14px; font-size: 1rem; font-weight: 800; border-radius: 15px; 
+            cursor: pointer; text-transform: uppercase;
+        }
+        .btn-neon:hover, .btn-neon:active { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .btn-play { 
+            border: 4px solid var(--neon-yellow) !important; color: var(--neon-yellow); 
+            font-size: 2.5rem; padding: 18px; text-shadow: 0 0 10px var(--neon-yellow);
+            box-shadow: 0 0 15px var(--neon-yellow);
+        }
+
+        .neon-modal { 
+            background: rgba(0, 0, 0, 0.95); border-radius: 25px; border: 3px solid #fff;
+            padding: 20px; flex-grow: 1; overflow-y: auto; text-align: left; margin: 10px 0;
+            display: flex; flex-direction: column;
+        }
+        .aba-titulo { font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 15px; text-shadow: 0 0 10px currentColor; }
+        .row-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
+
+        .upd-v { font-size: 1.8rem; color: var(--neon-pink); font-weight: 900; margin-bottom: 10px; }
+        .upd-topic { font-size: 1.2rem; font-weight: 800; display: block; margin-top: 12px; color: #fff; }
+        .upd-sub { color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px; }
+
+        #core-clicker { 
+            width: 180px; height: 180px; border-radius: 50%; border: 6px solid var(--neon-yellow);
+            margin: 15px auto; cursor: pointer; box-shadow: 0 0 25px var(--neon-yellow);
+            background: radial-gradient(circle, rgba(255,215,0,0.1), transparent);
+            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem;
+            position: relative;
+        }
+        #core-clicker:active { transform: scale(0.92); }
+        .frenzy { border-color: var(--neon-pink) !important; box-shadow: 0 0 40px var(--neon-pink) !important; animation: frenzyPulse 0.3s infinite; }
+        @keyframes frenzyPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .pop { position: absolute; color: #fff; font-weight: 900; pointer-events: none; animation: popUp 0.6s ease-out forwards; z-index: 10; }
+        @keyframes popUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+
+        .upgrades-container {
+            background: rgba(255,255,255,0.05); border-radius: 15px; padding: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
+            overflow-y: auto; max-height: 220px;
+        }
+        .up-card {
+            background: #111; border: 1px solid var(--neon-blue); border-radius: 10px;
+            padding: 8px; font-size: 0.8rem; cursor: pointer;
+        }
+        .up-card.locked { opacity: 0.5; border-color: #444; pointer-events: none; }
+        .up-card b { color: var(--neon-blue); display: block; font-size: 0.9rem; }
+        
+        .btn-toggle { padding: 6px 12px; border-radius: 10px; border: 2px solid #fff; font-weight: bold; cursor: pointer; }
+        .btn-on { border-color: var(--neon-green); color: var(--neon-green); }
+        .btn-off { border-color: var(--red-off); color: var(--red-off); }
+
+        .btn-back { width: 100%; color: #666; border-color: #333; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="scr-home" class="screen">
+        <div class="top-bar" id="hb-rank">
+            <span id="ui-pts">0 PR</span>
+            <div id="ui-rank">RANK: NADA</div>
+            <div class="progress-container"><div id="rank-bar"></div></div>
+        </div>
+        <div>
+            <h1 class="main-logo">RANKS!</h1>
+            <span id="tag-inc" class="tagline">INCREMENTAL</span>
+        </div>
+        <div class="menu-grid">
+            <button class="btn-neon btn-play" onclick="nav('scr-game')" id="m-play">JOGAR</button>
+            <button class="btn-neon" onclick="showRanks()" style="color:var(--neon-blue); border-color:var(--neon-blue)" id="m-ranks">RANKS</button>
+            <button class="btn-neon" onclick="nav('scr-upd')" style="color:var(--neon-pink); border-color:var(--neon-pink)" id="m-upd">ATUALIZAÇÕES</button>
+            <button class="btn-neon" onclick="nav('scr-sets')" style="color:var(--neon-green); border-color:var(--neon-green)" id="m-sets">CONFIGURAÇÕES</button>
+            <button class="btn-neon" onclick="nav('scr-about')" style="color:#ffcc00; border-color:#ffcc00" id="m-abt">SOBRE O JOGO</button>
+            <button class="btn-neon" onclick="nav('scr-dsc')" style="color:#7289da; border-color:#7289da">DISCORD</button>
+            <button class="btn-neon" onclick="nav('scr-crd')" id="m-crd">CRÉDITOS</button>
+        </div>
+    </div>
+
+    <div id="scr-game" class="screen hidden">
+        <div id="g-rank" style="font-weight:900; letter-spacing:4px; color:var(--neon-yellow)">RANK: NADA</div>
+        <div id="g-pts" style="font-size:3.5rem; font-weight:900;">0 PR</div>
+        <div id="core-clicker" onclick="add(event)">CLICK!</div>
+        <div class="upgrades-container">
+            <div class="up-card" id="up-click" onclick="buyUpgrade('click')">
+                <b>Poder de Clique</b>
+                <span id="uc-click">Custo: 15 PR</span>
+            </div>
+            <div class="up-card" id="up-auto" onclick="buyUpgrade('auto')">
+                <b>Ganho Passivo</b>
+                <span id="uc-auto">Custo: 50 PR</span>
+            </div>
+            <div class="up-card" id="up-x2click" onclick="buyUpgrade('x2click')">
+                <b>x2 Clicks</b>
+                <span id="uc-x2click">Custo: 50k PR</span>
+            </div>
+            <div class="up-card" id="up-x5click" onclick="buyUpgrade('x5click')">
+                <b>x5 Clicks (OP)</b>
+                <span id="uc-x5click">Custo: 1M PR</span>
+            </div>
+            <div class="up-card" id="up-x10click" onclick="buyUpgrade('x10click')">
+                <b>x10 Clicks</b>
+                <span id="uc-x10click">Custo: 25M PR</span>
+            </div>
+            <div class="up-card" id="up-x100click" onclick="buyUpgrade('x100click')">
+                <b>x100 Clicks (OP)</b>
+                <span id="uc-x100click">Custo: 1B PR</span>
+            </div>
+            <div class="up-card" id="up-x2auto" onclick="buyUpgrade('x2auto')">
+                <b>x2 Ganho Passivo</b>
+                <span id="uc-x2auto">Custo: 100k PR</span>
+            </div>
+        </div>
+        <button class="btn-neon" onclick="nav('scr-home')" style="border-color:var(--neon-pink); color:var(--neon-pink)">SAIR</button>
+    </div>
+
+    <div id="scr-ranks" class="screen hidden">
+        <h2 class="aba-titulo" style="color:var(--neon-blue)">RANKS</h2>
+        <div class="neon-modal" style="border-color: var(--neon-blue);"><div id="ranks-list"></div></div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <div id="scr-upd" class="screen hidden">
+        <h2 class="aba-titulo" style="color:var(--neon-pink)">ATUALIZAÇÕES</h2>
+        <div class="neon-modal" style="border-color: var(--neon-pink);">
+            <div class="upd-v">v1.0: LANÇAMENTO!</div>
+            <b class="upd-topic">• CRÍTICO!</b><span class="upd-sub">Chance de 1% ganhar 100x click por 3s!</span>
+            <b class="upd-topic">• NOVOS UPGRADES!</b><span class="upd-sub">Multiplicadores de clique e passivo adicionados!</span>
+            <b class="upd-topic">• RANKS!</b><span class="upd-sub">12 Ranks para conquistar!</span>
+            <b class="upd-topic">• AUTO-SAVE!</b><span class="upd-sub">Sistema de salvar progresso!</span>
+        </div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <div id="scr-sets" class="screen hidden">
+        <h2 class="aba-titulo" style="color:var(--neon-green)">CONFIGURAÇÕES</h2>
+        <div class="neon-modal" style="border-color: var(--neon-green);">
+            <div class="row-item"><span>Idioma</span><button class="btn-toggle btn-on" id="b-lang">Português</button></div>
+            <div class="row-item"><span>Sufixos</span><button class="btn-toggle btn-on" onclick="tExclusive('suf')" id="b-suf">ON</button></div>
+            <div class="row-item"><span>Notação científica</span><button class="btn-toggle btn-off" onclick="tExclusive('sci')" id="b-sci">OFF</button></div>
+        </div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <div id="scr-about" class="screen hidden">
+        <h2 class="aba-titulo" style="color:#ffcc00">SOBRE O JOGO</h2>
+        <div class="neon-modal" style="border-color:#ffcc00;">
+            <p style="font-size:1.1rem; line-height:1.6;">RANKS! é um jogo incremental focado na progressão constante. Clique, evolua seus ganhos e tente alcançar o Rank Creation!<br><br><b>Pr</b> = Pontos de Rank.</p>
+        </div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <div id="scr-dsc" class="screen hidden">
+        <h2 class="aba-titulo" style="color:#7289da">DISCORD</h2>
+        <div class="neon-modal" style="border-color:#7289da; justify-content:center;"><p style="text-align:center;">Servidor do Discord disponível em breve para a comunidade!</p></div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <div id="scr-crd" class="screen hidden">
+        <h2 class="aba-titulo">CRÉDITOS</h2>
+        <div class="neon-modal">
+            <div style="text-align:center; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+                <p><b>Designer:</b> Matts.js</p>
+                <p><b>Code:</b> Gemini AI</p>
+                <p style="margin-top:15px; color:#888;">Desenvolvido com HTML, CSS e JavaScript puro.</p>
+            </div>
+        </div>
+        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    </div>
+
+    <script>
+        let pts = 0;
+        let lang = "PT";
+        let cfg = { suf: true, sci: false };
+        let isFrenzy = false;
+        let upg = { 
+            clickLvl: 1, clickCost: 15, 
+            autoLvl: 0, autoCost: 50,
+            multClick: 1, x2cCost: 50000, x2cOwned: false,
+            multClickOP: 1, x5cCost: 1000000, x5cOwned: false,
+            multClickX10: 1, x10cCost: 25000000, x10cOwned: false,
+            multClickX100: 1, x100cCost: 1000000000, x100cOwned: false,
+            multAuto: 1, x2aCost: 100000, x2aOwned: false
+        };
+
+        const rData = [
+            { pt: "Nada", en: "None", v: 0, c: "#888" },
+            { pt: "Bronze", en: "Bronze", v: 10, c: "#cd7f32" },
+            { pt: "Prata", en: "Silver", v: 50, c: "#c0c0c0" },
+            { pt: "Ouro", en: "Gold", v: 100, c: "#ffd700" },
+            { pt: "Diamante", en: "Diamond", v: 1000, c: "#b9f2ff" },
+            { pt: "Platina", en: "Platinum", v: 10000, c: "#e5e4e2" },
+            { pt: "Esmeralda", en: "Emerald", v: 100000, c: "#50c878" },
+            { pt: "Rubi", en: "Ruby", v: 1000000, c: "#e0115f" },
+            { pt: "Adamantium", en: "Adamantium", v: 10000000, c: "#707070" },
+            { pt: "Cosmic", en: "Cosmic", v: 100000000, c: "#6a5acd" },
+            { pt: "Remnant", en: "Remnant", v: 1000000000, c: "#ff00ff" },
+            { pt: "Creation", en: "Creation", v: 10000000000, c: "#fff" }
+        ];
+
+        function nav(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function showRanks() {
+            const list = document.getElementById('ranks-list');
+            list.innerHTML = rData.map(r => `
+                <div class="row-item" style="color:${r.c}">
+                    <span>${r.pt.toUpperCase()}</span>
+                    <span>${formatValue(r.v)} PR</span>
+                </div>
+            `).join('');
+            nav('scr-ranks');
+        }
+
+        function save() { localStorage.setItem('ng_save', JSON.stringify({ pts, upg, cfg, lang })); }
+        
+        function load() {
+            let s = localStorage.getItem('ng_save');
+            if(s) {
+                let d = JSON.parse(s);
+                pts = isNaN(d.pts) ? 0 : d.pts;
+                cfg = d.cfg || cfg;
+                lang = d.lang || "PT";
+                if(d.upg) {
+                    for(let key in upg) {
+                        if(d.upg[key] !== undefined && !isNaN(d.upg[key])) {
+                            upg[key] = d.upg[key];
+                        }
+                    }
+                }
+                updateToggles(); upd();
+            }
+        }
+
+        function add(e) { 
+            let rand = Math.random();
+            if (!isFrenzy && rand < 0.01) {
+                isFrenzy = true;
+                document.getElementById('core-clicker').classList.add('frenzy');
+                setTimeout(() => {
+                    isFrenzy = false;
+                    document.getElementById('core-clicker').classList.remove('frenzy');
+                }, 3000);
+            }
+
+            let mC = upg.multClick || 1;
+            let mCOP = upg.multClickOP || 1;
+            let mCX10 = upg.multClickX10 || 1;
+            let mCX100 = upg.multClickX100 || 1;
+            
+            let baseGain = (upg.clickLvl || 1) * mC * mCOP * mCX10 * mCX100;
+            let finalGain = isFrenzy ? baseGain * 100 : baseGain;
+            
+            pts += finalGain; 
+            showPop(e, finalGain, isFrenzy);
+            upd(); save();
+        }
+
+        function showPop(e, val, crit) {
+            let p = document.createElement('div');
+            p.className = 'pop';
+            p.innerText = "+" + formatValue(val) + (crit ? " FRENZY!" : "");
+            if(crit) p.style.color = "var(--neon-pink)";
+            p.style.left = (e.clientX || window.innerWidth/2) + 'px';
+            p.style.top = (e.clientY || window.innerHeight/2) + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+        }
+
+        function buyUpgrade(type) {
+            if (type === 'click' && pts >= upg.clickCost) {
+                pts -= upg.clickCost; upg.clickLvl++; upg.clickCost = Math.floor(upg.clickCost * 1.8);
+            } else if (type === 'auto' && pts >= upg.autoCost) {
+                pts -= upg.autoCost; upg.autoLvl++; upg.autoCost = Math.floor(upg.autoCost * 2.2);
+            } else if (type === 'x2click' && pts >= upg.x2cCost && !upg.x2cOwned) {
+                pts -= upg.x2cCost; upg.multClick = 2; upg.x2cOwned = true;
+            } else if (type === 'x5click' && pts >= upg.x5cCost && !upg.x5cOwned) {
+                pts -= upg.x5cCost; upg.multClickOP = 5; upg.x5cOwned = true;
+            } else if (type === 'x10click' && pts >= upg.x10cCost && !upg.x10cOwned) {
+                pts -= upg.x10cCost; upg.multClickX10 = 10; upg.x10cOwned = true;
+            } else if (type === 'x100click' && pts >= upg.x100cCost && !upg.x100cOwned) {
+                pts -= upg.x100cCost; upg.multClickX100 = 100; upg.x100cOwned = true;
+            } else if (type === 'x2auto' && pts >= upg.x2aCost && !upg.x2aOwned) {
+                pts -= upg.x2aCost; upg.multAuto = 2; upg.x2aOwned = true;
+            }
+            upd(); save();
+        }
+
+        setInterval(() => { 
+            if (upg.autoLvl > 0) { 
+                let mA = upg.multAuto || 1;
+                pts += (upg.autoLvl * mA); 
+                upd(); 
+            } 
+        }, 1000);
+
+        function tExclusive(k) {
+            if (k === 'suf') { cfg.suf = !cfg.suf; cfg.sci = !cfg.suf; }
+            else { cfg.sci = !cfg.sci; cfg.suf = !cfg.sci; }
+            updateToggles(); upd(); save();
+        }
+
+        function updateToggles() {
+            document.getElementById('b-suf').innerText = cfg.suf ? "ON" : "OFF";
+            document.getElementById('b-suf').className = "btn-toggle " + (cfg.suf ? "btn-on" : "btn-off");
+            document.getElementById('b-sci').innerText = cfg.sci ? "ON" : "OFF";
+            document.getElementById('b-sci').className = "btn-toggle " + (cfg.sci ? "btn-on" : "btn-off");
+        }
+
+        function formatValue(val) {
+            if (isNaN(val)) return "0";
+            if (cfg.sci && val >= 1000) return val.toExponential(2);
+            if (cfg.suf && val >= 1000) {
+                if (val >= 1e12) return (val/1e12).toFixed(1) + "T";
+                if (val >= 1e9) return (val/1e9).toFixed(1) + "B";
+                if (val >= 1e6) return (val/1e6).toFixed(1) + "M";
+                if (val >= 1e3) return (val/1e3).toFixed(1) + "k";
+            }
+            return Math.floor(val).toLocaleString();
+        }
+
+        function upd() {
+            document.getElementById('ui-pts').innerText = formatValue(pts) + " PR";
+            document.getElementById('g-pts').innerText = formatValue(pts) + " PR";
+            
+            document.getElementById('uc-click').innerText = "Custo: " + formatValue(upg.clickCost) + " PR";
+            document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
+            document.getElementById('up-click').className = pts >= upg.clickCost ? "up-card" : "up-card locked";
+            document.getElementById('up-auto').className = pts >= upg.autoCost ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x2click').innerText = upg.x2cOwned ? "COMPRADO" : "Custo: 50k PR";
+            document.getElementById('up-x2click').className = (pts >= upg.x2cCost && !upg.x2cOwned) ? "up-card" : "up-card locked";
+            
+            document.getElementById('uc-x5click').innerText = upg.x5cOwned ? "COMPRADO" : "Custo: 1M PR";
+            document.getElementById('up-x5click').className = (pts >= upg.x5cCost && !upg.x5cOwned) ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x10click').innerText = upg.x10cOwned ? "COMPRADO" : "Custo: 25M PR";
+            document.getElementById('up-x10click').className = (pts >= upg.x10cCost && !upg.x10cOwned) ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x100click').innerText = upg.x100cOwned ? "COMPRADO" : "Custo: 1B PR";
+            document.getElementById('up-x100click').className = (pts >= upg.x100cCost && !upg.x100cOwned) ? "up-card" : "up-card locked";
+
+            document.getElementById('uc-x2auto').innerText = upg.x2aOwned ? "COMPRADO" : "Custo: 100k PR";
+            document.getElementById('up-x2auto').className = (pts >= upg.x2aCost && !upg.x2aOwned) ? "up-card" : "up-card locked";
+
+            let cur = rData[0], next = rData[1];
+            for (let i=0; i<rData.length; i++) { if (pts >= rData[i].v) { cur = rData[i]; next = rData[i+1] || rData[i]; } }
+
+            const rTxt = "RANK: " + (lang === "PT" ? cur.pt : cur.en).toUpperCase();
+            document.getElementById('ui-rank').innerText = rTxt;
+            document.getElementById('ui-rank').style.color = cur.c;
+            document.getElementById('g-rank').innerText = rTxt;
+            document.getElementById('g-rank').style.color = cur.c;
+
+            let pct = (pts >= 10000000000) ? 100 : ((pts - cur.v) / (next.v - cur.v)) * 100;
+            document.getElementById('rank-bar').style.width = Math.min(100, pct) + "%";
+        }
+        
+        load();
+    </script>
+</body>
+</html>
