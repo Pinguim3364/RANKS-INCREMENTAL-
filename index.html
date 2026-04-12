@@ -4,59 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RANKS! - Neon Galaxy</title>
-    <style>
+       <style>
         :root {
-            --neon-yellow: #ffd700;
-            --neon-blue: #00d4ff;
-            --neon-pink: #ff00ff;
-            --neon-green: #39ff14;
-            --neon-purple: #bc13fe;
-            --red-off: #ff4444;
+            --neon-yellow: #ffd700; --neon-blue: #00d4ff; --neon-pink: #ff00ff;
+            --neon-green: #39ff14; --neon-purple: #bc13fe; --red-off: #ff4444;
         }
 
         * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            user-select: none;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s, background 0.3s;
+            box-sizing: border-box; -webkit-tap-highlight-color: transparent; 
+            user-select: none; transition: transform 0.2s, box-shadow 0.2s;
         }
 
         body { 
-            margin: 0; 
-            background: #000;
-            background-image: 
-                radial-gradient(1px 1px at 10% 10%, #fff, transparent),
-                radial-gradient(1px 1px at 50% 50%, #fff, transparent),
-                radial-gradient(2px 2px at 90% 20%, #fff, transparent),
-                radial-gradient(1.5px 1.5px at 30% 80%, #fff, transparent),
-                radial-gradient(1px 1px at 70% 60%, #fff, transparent);
-            background-size: 250px 250px;
-            color: #fff; 
-            font-family: 'Segoe UI', sans-serif; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; overflow: hidden; 
+            margin: 0; background: #000;
+            background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent), radial-gradient(1px 1px at 50% 50%, #fff, transparent);
+            color: #fff; font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; 
+            min-height: 100vh; overflow-x: hidden; overflow-y: auto;
         }
 
         .screen { 
-            text-align: center; width: 95%; max-width: 420px; height: 95vh; 
-            display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0;
+            text-align: center; width: 95%; max-width: 420px; 
+            min-height: 100vh; display: flex; flex-direction: column; 
+            padding: 20px 0; gap: 15px;
         }
         .hidden { display: none !important; }
 
         .top-bar {
-            background: rgba(0,0,0,0.9); border: 2px solid var(--neon-yellow);
-            border-radius: 20px; padding: 12px;
-            box-shadow: 0 0 15px var(--neon-yellow);
-            position: relative;
+            background: rgba(0,0,0,0.95); border: 3px solid var(--neon-yellow);
+            border-radius: 20px; padding: 15px; box-shadow: 0 0 20px var(--neon-yellow);
+            position: sticky; top: 10px; z-index: 100;
         }
-        #ui-pts { font-size: 2.5rem; font-weight: 900; text-shadow: 0 0 10px #fff; display: block; }
-        #ui-rank { font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; }
+        #ui-pts { font-size: 2.8rem; font-weight: 900; text-shadow: 0 0 10px #fff; display: block; }
+        #ui-rank { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
 
-        .progress-container { width: 100%; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
-        #rank-bar { width: 0%; height: 100%; background: var(--neon-yellow); box-shadow: 0 0 8px var(--neon-yellow); transition: width 0.4s ease; }
+        .progress-container { width: 100%; height: 10px; background: #222; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #rank-bar { width: 0%; height: 100%; background: var(--neon-yellow); box-shadow: 0 0 12px var(--neon-yellow); transition: width 0.4s ease; }
 
-        .main-logo { font-size: 5rem; font-weight: 900; margin: 0; text-shadow: 0 0 30px var(--neon-yellow); line-height: 0.9; }
-        .tagline { color: var(--neon-yellow); font-size: 0.9rem; letter-spacing: 6px; font-weight: bold; }
+        .main-logo { font-size: 5.5rem; font-weight: 900; margin: 10px 0; text-shadow: 0 0 30px var(--neon-yellow); line-height: 0.8; }
+        .tagline { color: var(--neon-yellow); font-size: 1rem; letter-spacing: 6px; font-weight: bold; }
+  
+        /* CORREÇÃO DO TÍTULO v1.0.5 */
+        .aba-titulo {
+            font-size: 3.0rem !important;
+            text-shadow: 0 0 15px currentColor;
+            margin: 10px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: inherit;
+            text-align: center;
+        }
+
+        /* LINHA DIVISÓRIA ROSA v1.0.5 */
+        .divider-pink {
+            height: 3px;
+            background: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink);
+            margin: 10px 0 20px 0;
+            border-radius: 10px;
+        }
 
         .menu-grid { display: flex; flex-direction: column; gap: 10px; }
         .btn-neon { 
@@ -80,12 +86,12 @@
             padding: 20px; flex-grow: 1; overflow-y: auto; text-align: left; margin: 10px 0;
             display: flex; flex-direction: column;
         }
-        .aba-titulo { font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 15px; text-shadow: 0 0 10px currentColor; }
+        
         .row-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
 
-        .upd-v { font-size: 1.8rem; color: var(--neon-pink); font-weight: 900; margin-bottom: 10px; }
-        .upd-topic { font-size: 1.2rem; font-weight: 800; display: block; margin-top: 12px; color: #fff; }
-        .upd-sub { color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px; }
+        .upd-v { font-size: 1.6rem; color: var(--neon-pink); font-weight: 900; margin-bottom: 5px; }
+        .upd-topic { font-size: 1.1rem; font-weight: 800; display: block; margin-top: 10px; color: #fff; }
+        .upd-sub { color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 5px; }
 
         #core-clicker { 
             width: 180px; height: 180px; border-radius: 50%; border: 6px solid var(--neon-yellow);
@@ -117,7 +123,18 @@
         .btn-on { border-color: var(--neon-green); color: var(--neon-green); }
         .btn-off { border-color: var(--red-off); color: var(--red-off); }
 
-        .btn-back { width: 100%; color: #666; border-color: #333; margin-top: 5px; }
+        /* BOTÃO VOLTAR CAMALEÃO v1.0.5 */
+        .btn-back { 
+            width: 100%; 
+            color: inherit !important; 
+            border: 3px solid currentColor !important; 
+            margin-top: 15px; 
+            padding: 18px; 
+            font-weight: 900;
+            box-shadow: 0 0 15px currentColor;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -180,27 +197,48 @@
         <button class="btn-neon" onclick="nav('scr-home')" style="border-color:var(--neon-pink); color:var(--neon-pink)">SAIR</button>
     </div>
 
-    <div id="scr-ranks" class="screen hidden">
-        <h2 class="aba-titulo" style="color:var(--neon-blue)">RANKS</h2>
-        <div class="neon-modal" style="border-color: var(--neon-blue);"><div id="ranks-list"></div></div>
+    <div id="scr-ranks" class="screen hidden" style="color: var(--neon-blue) !important;">
+        <h2 class="aba-titulo">RANKS</h2>
+        <div class="neon-modal" style="border-color: currentColor;"><div id="ranks-list"></div></div>
         <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
 
-    <div id="scr-upd" class="screen hidden">
-        <h2 class="aba-titulo" style="color:var(--neon-pink)">ATUALIZAÇÕES</h2>
-        <div class="neon-modal" style="border-color: var(--neon-pink);">
-            <div class="upd-v">v1.0: LANÇAMENTO!</div>
-            <b class="upd-topic">• CRÍTICO!</b><span class="upd-sub">Chance de 1% ganhar 100x click por 3s!</span>
-            <b class="upd-topic">• NOVOS UPGRADES!</b><span class="upd-sub">Multiplicadores de clique e passivo adicionados!</span>
-            <b class="upd-topic">• RANKS!</b><span class="upd-sub">12 Ranks para conquistar!</span>
-            <b class="upd-topic">• AUTO-SAVE!</b><span class="upd-sub">Sistema de salvar progresso!</span>
+    <div id="scr-upd" class="screen hidden" style="color: var(--neon-pink) !important;">
+        <h2 class="aba-titulo">ATUALIZAÇÕES</h2>
+        <div class="neon-modal" style="border-color: currentColor;">
+<div class="upd-v">v1.0.5: Correções</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• Correção de Bugs</b>
+<span class="upd-sub">Melhoria no sistema de scroll e cliques.</span>
+
+<b class="upd-topic">• Título Reduzido</b>
+<span class="upd-sub">Interface ajustada para melhor visibilidade (5.5rem > 2.2rem).</span>
+
+<b class="upd-topic">• Interface Modificada</b>
+<span class="upd-sub">Cores dinâmicas e listras neon adicionadas.</span>
+
+<div style="height: 4px; background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); margin: 25px 0; border-radius: 10px;"></div>
+
+<div style="opacity: 0.8;">
+    <div class="upd-v" style="font-size: 1.4rem;">v1.0: LANÇAMENTO!</div>
+    <b class="upd-topic">• CRÍTICO!</b>
+    <span class="upd-sub">Chance de 1% ganhar 100x click por 3s!</span>
+    <b class="upd-topic">• NOVOS UPGRADES!</b>
+    <span class="upd-sub">Multiplicadores de clique e passivo adicionados!</span>
+    <b class="upd-topic">• RANKS!</b>
+    <span class="upd-sub">12 Ranks para conquistar!</span>
+    <b class="upd-topic">• AUTO-SAVE!</b>
+    <span class="upd-sub">Sistema de salvar progresso!</span>
+</div>
+
+
         </div>
         <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
 
-    <div id="scr-sets" class="screen hidden">
-        <h2 class="aba-titulo" style="color:var(--neon-green)">CONFIGURAÇÕES</h2>
-        <div class="neon-modal" style="border-color: var(--neon-green);">
+    <div id="scr-sets" class="screen hidden" style="color: var(--neon-green) !important;">
+        <h2 class="aba-titulo">CONFIGURAÇÕES</h2>
+        <div class="neon-modal" style="border-color: currentColor;">
             <div class="row-item"><span>Idioma</span><button class="btn-toggle btn-on" id="b-lang">Português</button></div>
             <div class="row-item"><span>Sufixos</span><button class="btn-toggle btn-on" onclick="tExclusive('suf')" id="b-suf">ON</button></div>
             <div class="row-item"><span>Notação científica</span><button class="btn-toggle btn-off" onclick="tExclusive('sci')" id="b-sci">OFF</button></div>
@@ -208,17 +246,17 @@
         <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
 
-    <div id="scr-about" class="screen hidden">
-        <h2 class="aba-titulo" style="color:#ffcc00">SOBRE O JOGO</h2>
-        <div class="neon-modal" style="border-color:#ffcc00;">
+    <div id="scr-about" class="screen hidden" style="color: #ffcc00 !important;">
+        <h2 class="aba-titulo">SOBRE O JOGO</h2>
+        <div class="neon-modal" style="border-color: currentColor;">
             <p style="font-size:1.1rem; line-height:1.6;">RANKS! é um jogo incremental focado na progressão constante. Clique, evolua seus ganhos e tente alcançar o Rank Creation!<br><br><b>Pr</b> = Pontos de Rank.</p>
         </div>
         <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
 
-    <div id="scr-dsc" class="screen hidden">
-        <h2 class="aba-titulo" style="color:#7289da">DISCORD</h2>
-        <div class="neon-modal" style="border-color:#7289da; justify-content:center;"><p style="text-align:center;">Servidor do Discord disponível em breve para a comunidade!</p></div>
+    <div id="scr-dsc" class="screen hidden" style="color: #7289da !important;">
+        <h2 class="aba-titulo">DISCORD</h2>
+        <div class="neon-modal" style="border-color: currentColor; justify-content:center;"><p style="text-align:center;">Servidor do Discord disponível em breve para a comunidade!</p></div>
         <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
 
@@ -226,8 +264,7 @@
         <h2 class="aba-titulo">CRÉDITOS</h2>
         <div class="neon-modal">
             <div style="text-align:center; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-                <p><b>Designer:</b> Matts.js</p>
-                <p><b>Code:</b> Gemini AI</p>
+                <p><b>Designer, Product Manager e Lead Developer:</b> Matts.js</p>
                 <p style="margin-top:15px; color:#888;">Desenvolvido com HTML, CSS e JavaScript puro.</p>
             </div>
         </div>
@@ -392,7 +429,7 @@
             document.getElementById('g-pts').innerText = formatValue(pts) + " PR";
             
             document.getElementById('uc-click').innerText = "Custo: " + formatValue(upg.clickCost) + " PR";
-                      document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
+            document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
             document.getElementById('up-click').className = pts >= upg.clickCost ? "up-card" : "up-card locked";
             document.getElementById('up-auto').className = pts >= upg.autoCost ? "up-card" : "up-card locked";
 
