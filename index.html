@@ -3,465 +3,707 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RANKS! - Neon Galaxy</title>
-       <style>
-        :root {
-            --neon-yellow: #ffd700; --neon-blue: #00d4ff; --neon-pink: #ff00ff;
-            --neon-green: #39ff14; --neon-purple: #bc13fe; --red-off: #ff4444;
-        }
-
-        * { 
-            box-sizing: border-box; -webkit-tap-highlight-color: transparent; 
-            user-select: none; transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        body { 
-            margin: 0; background: #000;
-            background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent), radial-gradient(1px 1px at 50% 50%, #fff, transparent);
-            color: #fff; font-family: 'Segoe UI', sans-serif; 
-            display: flex; justify-content: center; 
-            min-height: 100vh; overflow-x: hidden; overflow-y: auto;
-        }
-
-        .screen { 
-            text-align: center; width: 95%; max-width: 420px; 
-            min-height: 100vh; display: flex; flex-direction: column; 
-            padding: 20px 0; gap: 15px;
-        }
-        .hidden { display: none !important; }
-
-        .top-bar {
-            background: rgba(0,0,0,0.95); border: 3px solid var(--neon-yellow);
-            border-radius: 20px; padding: 15px; box-shadow: 0 0 20px var(--neon-yellow);
-            position: sticky; top: 10px; z-index: 100;
-        }
-        #ui-pts { font-size: 2.8rem; font-weight: 900; text-shadow: 0 0 10px #fff; display: block; }
-        #ui-rank { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
-
-        .progress-container { width: 100%; height: 10px; background: #222; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        #rank-bar { width: 0%; height: 100%; background: var(--neon-yellow); box-shadow: 0 0 12px var(--neon-yellow); transition: width 0.4s ease; }
-
-        .main-logo { font-size: 5.5rem; font-weight: 900; margin: 10px 0; text-shadow: 0 0 30px var(--neon-yellow); line-height: 0.8; }
-        .tagline { color: var(--neon-yellow); font-size: 1rem; letter-spacing: 6px; font-weight: bold; }
-  
-        /* CORREÇÃO DO TÍTULO v1.0.5 */
-        .aba-titulo {
-            font-size: 3.0rem !important;
-            text-shadow: 0 0 15px currentColor;
-            margin: 10px 0;
-            text-transform: uppercase;
-            font-weight: 900;
-            color: inherit;
-            text-align: center;
-        }
-
-        /* LINHA DIVISÓRIA ROSA v1.0.5 */
-        .divider-pink {
-            height: 3px;
-            background: var(--neon-pink);
-            box-shadow: 0 0 15px var(--neon-pink);
-            margin: 10px 0 20px 0;
-            border-radius: 10px;
-        }
-
-        .menu-grid { display: flex; flex-direction: column; gap: 10px; }
-        .btn-neon { 
-            background: #000; color: #fff; border: 2px solid #fff; 
-            padding: 14px; font-size: 1rem; font-weight: 800; border-radius: 15px; 
-            cursor: pointer; text-transform: uppercase;
-        }
-        .btn-neon:hover, .btn-neon:active { 
-            transform: scale(1.05); 
-            box-shadow: 0 0 20px currentColor;
-        }
-
-        .btn-play { 
-            border: 4px solid var(--neon-yellow) !important; color: var(--neon-yellow); 
-            font-size: 2.5rem; padding: 18px; text-shadow: 0 0 10px var(--neon-yellow);
-            box-shadow: 0 0 15px var(--neon-yellow);
-        }
-
-        .neon-modal { 
-            background: rgba(0, 0, 0, 0.95); border-radius: 25px; border: 3px solid #fff;
-            padding: 20px; flex-grow: 1; overflow-y: auto; text-align: left; margin: 10px 0;
-            display: flex; flex-direction: column;
-        }
-        
-        .row-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
-
-        .upd-v { font-size: 1.6rem; color: var(--neon-pink); font-weight: 900; margin-bottom: 5px; }
-        .upd-topic { font-size: 1.1rem; font-weight: 800; display: block; margin-top: 10px; color: #fff; }
-        .upd-sub { color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 5px; }
-
-        #core-clicker { 
-            width: 180px; height: 180px; border-radius: 50%; border: 6px solid var(--neon-yellow);
-            margin: 15px auto; cursor: pointer; box-shadow: 0 0 25px var(--neon-yellow);
-            background: radial-gradient(circle, rgba(255,215,0,0.1), transparent);
-            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem;
-            position: relative;
-        }
-        #core-clicker:active { transform: scale(0.92); }
-        .frenzy { border-color: var(--neon-pink) !important; box-shadow: 0 0 40px var(--neon-pink) !important; animation: frenzyPulse 0.3s infinite; }
-        @keyframes frenzyPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .pop { position: absolute; color: #fff; font-weight: 900; pointer-events: none; animation: popUp 0.6s ease-out forwards; z-index: 10; }
-        @keyframes popUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
-
-        .upgrades-container {
-            background: rgba(255,255,255,0.05); border-radius: 15px; padding: 10px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
-            overflow-y: auto; max-height: 220px;
-        }
-        .up-card {
-            background: #111; border: 1px solid var(--neon-blue); border-radius: 10px;
-            padding: 8px; font-size: 0.8rem; cursor: pointer;
-        }
-        .up-card.locked { opacity: 0.5; border-color: #444; pointer-events: none; }
-        .up-card b { color: var(--neon-blue); display: block; font-size: 0.9rem; }
-        
-        .btn-toggle { padding: 6px 12px; border-radius: 10px; border: 2px solid #fff; font-weight: bold; cursor: pointer; }
-        .btn-on { border-color: var(--neon-green); color: var(--neon-green); }
-        .btn-off { border-color: var(--red-off); color: var(--red-off); }
-
-        /* BOTÃO VOLTAR CAMALEÃO v1.0.5 */
-        .btn-back { 
-            width: 100%; 
-            color: inherit !important; 
-            border: 3px solid currentColor !important; 
-            margin-top: 15px; 
-            padding: 18px; 
-            font-weight: 900;
-            box-shadow: 0 0 15px currentColor;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
+    <title>RANKS! - Neon Galaxy v2.1</title>
+    <style>
+        :root { --neon-yellow:#ffd700;--neon-blue:#00d4ff;--neon-pink:#ff00ff;--neon-green:#39ff14;--neon-purple:#bc13fe;--red-off:#ff4444; }
+        *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;transition:transform 0.2s,box-shadow 0.2s;}
+        body{margin:0;background:#000;color:#fff;font-family:'Segoe UI',sans-serif;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden;overflow-y:auto;}
+        #galaxy-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+        #galaxy-bg canvas{width:100%;height:100%;}
+        .screen{text-align:center;width:95%;max-width:420px;min-height:100vh;display:flex;flex-direction:column;padding:20px 0;gap:15px;position:relative;z-index:1;}
+        .hidden{display:none !important;}
+        .top-bar{background:rgba(0,0,0,0.88);border:3px solid var(--neon-yellow);border-radius:20px;padding:15px;box-shadow:0 0 20px var(--neon-yellow);position:sticky;top:10px;z-index:1002;backdrop-filter:blur(8px);}
+        #ui-pts{font-size:2.8rem;font-weight:900;text-shadow:0 0 10px #fff;display:block;}
+        #ui-rank{font-size:1.2rem;font-weight:bold;letter-spacing:2px;}
+        .progress-container{width:100%;height:10px;background:#222;border-radius:10px;margin-top:10px;overflow:hidden;}
+        #rank-bar{width:0%;height:100%;background:var(--neon-yellow);box-shadow:0 0 12px var(--neon-yellow);transition:width 0.4s ease;}
+        .main-logo{font-size:5.5rem;font-weight:900;margin:10px 0;text-shadow:0 0 30px var(--neon-yellow);line-height:0.8;}
+        .tagline{color:var(--neon-yellow);font-size:1rem;letter-spacing:6px;font-weight:bold;}
+        .aba-titulo{font-size:3.0rem !important;text-shadow:0 0 15px currentColor;margin:0;padding:15px 0;text-transform:uppercase;font-weight:900;color:inherit;text-align:center;position:sticky;top:0;background:rgba(0,0,0,0.92);z-index:1001;backdrop-filter:blur(6px);}
+        .divider-pink{height:3px;background:var(--neon-pink);box-shadow:0 0 15px var(--neon-pink);margin:10px 0 20px 0;border-radius:10px;}
+        .divider-sep{height:3px;background:var(--neon-pink);box-shadow:0 0 15px var(--neon-pink);margin:25px 0;border-radius:10px;}
+        .menu-grid{display:flex;flex-direction:column;gap:10px;}
+        .btn-neon{background:rgba(0,0,0,0.7);color:#fff;border:2px solid #fff;padding:14px;font-size:1rem;font-weight:800;border-radius:15px;cursor:pointer;text-transform:uppercase;}
+        .btn-neon:hover,.btn-neon:active{transform:scale(1.05);box-shadow:0 0 20px currentColor;}
+        .btn-play{border:4px solid var(--neon-yellow) !important;color:var(--neon-yellow);font-size:2.5rem;padding:18px;text-shadow:0 0 10px var(--neon-yellow);box-shadow:0 0 15px var(--neon-yellow);}
+        .neon-modal{background:rgba(0,0,0,0.92);border-radius:25px;border:3px solid #fff;padding:20px;flex-grow:1;overflow-y:auto;text-align:left;margin:10px 0;display:flex;flex-direction:column;backdrop-filter:blur(6px);}
+        .row-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;}
+        .upd-v{font-size:1.6rem;color:var(--neon-pink);font-weight:900;margin-bottom:5px;}
+        .upd-topic{font-size:1.1rem;font-weight:800;display:block;margin-top:10px;color:#fff;}
+        .upd-sub{color:#aaa;font-size:0.9rem;display:block;margin-bottom:5px;padding-left:12px;}
+        /* CLICKER */
+        .clicker-area{position:relative;display:flex;align-items:center;justify-content:center;margin:10px auto;}
+        .clicker-bg{position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,0,0.07) 0%,rgba(0,212,255,0.04) 55%,transparent 75%);animation:bgPulse 3s ease-in-out infinite;pointer-events:none;}
+        @keyframes bgPulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.18);opacity:1}}
+        #core-clicker{width:180px;height:180px;border-radius:50%;border:4px solid var(--neon-yellow);cursor:pointer;box-shadow:0 0 18px rgba(255,215,0,0.5),inset 0 0 25px rgba(255,215,0,0.07);background:radial-gradient(circle at 40% 35%,rgba(255,215,0,0.15),rgba(0,212,255,0.05) 60%,transparent);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;letter-spacing:2px;position:relative;z-index:1;transition:transform 0.08s,box-shadow 0.08s;}
+        #core-clicker:active{transform:scale(0.92);box-shadow:0 0 40px rgba(255,215,0,1),inset 0 0 30px rgba(255,215,0,0.25);}
+        #core-clicker.frenzy{animation:frenzyPulse 0.15s infinite;border-color:var(--neon-pink) !important;box-shadow:0 0 35px var(--neon-pink),0 0 70px rgba(255,0,255,0.5) !important;}
+        @keyframes frenzyPulse{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+        /* COMET */
+        .comet{position:fixed;pointer-events:none;z-index:9999;width:160px;height:3px;background:linear-gradient(to right,transparent,#ffd700,#fffbe0);border-radius:2px;box-shadow:0 0 8px #ffd700,0 0 18px rgba(255,215,0,0.6);}
+        .comet.clickable{pointer-events:auto;cursor:pointer;z-index:10000;}
+        @keyframes cometFly{0%{left:-200px;opacity:1}85%{opacity:1}100%{left:110%;opacity:0}}
+        .pop{position:fixed;color:#fff;font-weight:900;pointer-events:none;animation:popUp 0.65s ease-out forwards;z-index:10000;font-size:1rem;}
+        @keyframes popUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.4)}}
+        .upgrades-container{background:rgba(255,255,255,0.04);border-radius:15px;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;overflow-y:auto;max-height:260px;}
+        .up-card{background:rgba(0,0,0,0.75);border:1px solid var(--neon-blue);border-radius:10px;padding:8px;font-size:0.8rem;cursor:pointer;}
+        .up-card.locked{opacity:0.4;border-color:#333;pointer-events:none;}
+        .up-card b{color:var(--neon-blue);display:block;font-size:0.9rem;}
+        .btn-toggle{padding:6px 12px;border-radius:10px;border:2px solid #fff;font-weight:bold;cursor:pointer;background:rgba(0,0,0,0.5);}
+        .btn-on{border-color:var(--neon-green);color:var(--neon-green);}
+        .btn-off{border-color:var(--red-off);color:var(--red-off);}
+        .btn-back{width:100%;color:inherit !important;border:3px solid currentColor !important;margin-top:15px;padding:18px;font-weight:900;box-shadow:0 0 15px currentColor;background:rgba(0,0,0,0.5);}
+        /* PRESTIGE */
+        #btn-prestige{border-color:#ff9900 !important;color:#ff9900;box-shadow:0 0 15px #ff9900;margin-top:5px;display:none;animation:prestigeGlow 1.5s ease-in-out infinite;}
+        @keyframes prestigeGlow{0%,100%{box-shadow:0 0 15px #ff9900}50%{box-shadow:0 0 35px #ff9900,0 0 60px rgba(255,153,0,0.5)}}
+        #prestige-info{font-size:0.85rem;color:#ff9900;letter-spacing:1px;text-align:center;min-height:1.2em;}
+        /* RANK VFX */
+        .rank-vfx-particle{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;animation:vfxFloat 1.8s ease-out forwards;}
+        @keyframes vfxFloat{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}100%{opacity:0;transform:translateY(-220px) scale(0.2) rotate(720deg)}}
+        /* RANK UP BANNER */
+        #rankup-banner{position:fixed;top:22%;left:50%;transform:translateX(-50%);font-size:2rem;font-weight:900;letter-spacing:4px;padding:14px 28px;border-radius:20px;border:3px solid currentColor;background:rgba(0,0,0,0.92);z-index:9999;opacity:0;pointer-events:none;text-shadow:0 0 20px currentColor;white-space:nowrap;}
+        #rankup-banner.show{animation:bannerPop 2.2s ease-out forwards;}
+        @keyframes bannerPop{0%{opacity:0;transform:translateX(-50%) scale(0.4)}15%{opacity:1;transform:translateX(-50%) scale(1.1)}25%{transform:translateX(-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translateX(-50%) scale(1)}}
+        /* COMET TIMER */
+        #comet-timer{font-size:0.75rem;color:#ffd700;letter-spacing:1px;text-align:center;opacity:0.8;}
     </style>
 </head>
 <body>
+<div id="galaxy-bg"><canvas id="galaxy-canvas"></canvas></div>
+<div id="rankup-banner">RANK UP!</div>
 
-    <div id="scr-home" class="screen">
-        <div class="top-bar" id="hb-rank">
-            <span id="ui-pts">0 PR</span>
-            <div id="ui-rank">RANK: NADA</div>
-            <div class="progress-container"><div id="rank-bar"></div></div>
-        </div>
-        <div>
-            <h1 class="main-logo">RANKS!</h1>
-            <span id="tag-inc" class="tagline">INCREMENTAL</span>
-        </div>
-        <div class="menu-grid">
-            <button class="btn-neon btn-play" onclick="nav('scr-game')" id="m-play">JOGAR</button>
-            <button class="btn-neon" onclick="showRanks()" style="color:var(--neon-blue); border-color:var(--neon-blue)" id="m-ranks">RANKS</button>
-            <button class="btn-neon" onclick="nav('scr-upd')" style="color:var(--neon-pink); border-color:var(--neon-pink)" id="m-upd">ATUALIZAÇÕES</button>
-            <button class="btn-neon" onclick="nav('scr-sets')" style="color:var(--neon-green); border-color:var(--neon-green)" id="m-sets">CONFIGURAÇÕES</button>
-            <button class="btn-neon" onclick="nav('scr-about')" style="color:#ffcc00; border-color:#ffcc00" id="m-abt">SOBRE O JOGO</button>
-            <button class="btn-neon" onclick="nav('scr-dsc')" style="color:#7289da; border-color:#7289da">DISCORD</button>
-            <button class="btn-neon" onclick="nav('scr-crd')" id="m-crd">CRÉDITOS</button>
-        </div>
+<div id="scr-home" class="screen">
+    <div class="top-bar">
+        <span id="ui-pts">0 PR</span>
+        <div id="ui-rank">RANK: NADA</div>
+        <div class="progress-container"><div id="rank-bar"></div></div>
     </div>
-
-    <div id="scr-game" class="screen hidden">
-        <div id="g-rank" style="font-weight:900; letter-spacing:4px; color:var(--neon-yellow)">RANK: NADA</div>
-        <div id="g-pts" style="font-size:3.5rem; font-weight:900;">0 PR</div>
-        <div id="core-clicker" onclick="add(event)">CLICK!</div>
-        <div class="upgrades-container">
-            <div class="up-card" id="up-click" onclick="buyUpgrade('click')">
-                <b>Poder de Clique</b>
-                <span id="uc-click">Custo: 15 PR</span>
-            </div>
-            <div class="up-card" id="up-auto" onclick="buyUpgrade('auto')">
-                <b>Ganho Passivo</b>
-                <span id="uc-auto">Custo: 50 PR</span>
-            </div>
-            <div class="up-card" id="up-x2click" onclick="buyUpgrade('x2click')">
-                <b>x2 Clicks</b>
-                <span id="uc-x2click">Custo: 50k PR</span>
-            </div>
-            <div class="up-card" id="up-x5click" onclick="buyUpgrade('x5click')">
-                <b>x5 Clicks (OP)</b>
-                <span id="uc-x5click">Custo: 1M PR</span>
-            </div>
-            <div class="up-card" id="up-x10click" onclick="buyUpgrade('x10click')">
-                <b>x10 Clicks</b>
-                <span id="uc-x10click">Custo: 25M PR</span>
-            </div>
-            <div class="up-card" id="up-x100click" onclick="buyUpgrade('x100click')">
-                <b>x100 Clicks (OP)</b>
-                <span id="uc-x100click">Custo: 1B PR</span>
-            </div>
-            <div class="up-card" id="up-x2auto" onclick="buyUpgrade('x2auto')">
-                <b>x2 Ganho Passivo</b>
-                <span id="uc-x2auto">Custo: 100k PR</span>
-            </div>
-        </div>
-        <button class="btn-neon" onclick="nav('scr-home')" style="border-color:var(--neon-pink); color:var(--neon-pink)">SAIR</button>
+    <div>
+        <h1 class="main-logo">RANKS!</h1>
+        <span id="tag-inc" class="tagline">INCREMENTAL</span>
     </div>
-
-    <div id="scr-ranks" class="screen hidden" style="color: var(--neon-blue) !important;">
-        <h2 class="aba-titulo">RANKS</h2>
-        <div class="neon-modal" style="border-color: currentColor;"><div id="ranks-list"></div></div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
+    <div id="prestige-info"></div>
+    <div class="menu-grid">
+        <button class="btn-neon btn-play" onclick="nav('scr-game')" id="m-play">JOGAR</button>
+        <button class="btn-neon" onclick="showRanks()" style="color:var(--neon-blue);border-color:var(--neon-blue)" id="m-ranks">RANKS</button>
+        <button class="btn-neon" onclick="nav('scr-upd')" style="color:var(--neon-pink);border-color:var(--neon-pink)" id="m-upd">ATUALIZAÇÕES</button>
+        <button class="btn-neon" onclick="nav('scr-sets')" style="color:var(--neon-green);border-color:var(--neon-green)" id="m-sets">CONFIGURAÇÕES</button>
+        <button class="btn-neon" onclick="nav('scr-about')" style="color:#ffcc00;border-color:#ffcc00" id="m-abt">SOBRE O JOGO</button>
+        <button class="btn-neon" onclick="nav('scr-dsc')" style="color:#7289da;border-color:#7289da">DISCORD</button>
+        <button class="btn-neon" onclick="nav('scr-crd')" id="m-crd">CRÉDITOS</button>
     </div>
-
-    <div id="scr-upd" class="screen hidden" style="color: var(--neon-pink) !important;">
-        <h2 class="aba-titulo">ATUALIZAÇÕES</h2>
-        <div class="neon-modal" style="border-color: currentColor;">
-<div class="upd-v">v1.0.5: Correções</div>
-<div class="divider-pink"></div>
-<b class="upd-topic">• Correção de Bugs</b>
-<span class="upd-sub">Melhoria no sistema de scroll e cliques.</span>
-
-<b class="upd-topic">• Título Reduzido</b>
-<span class="upd-sub">Interface ajustada para melhor visibilidade (5.5rem > 2.2rem).</span>
-
-<b class="upd-topic">• Interface Modificada</b>
-<span class="upd-sub">Cores dinâmicas e listras neon adicionadas.</span>
-
-<div style="height: 4px; background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); margin: 25px 0; border-radius: 10px;"></div>
-
-<div style="opacity: 0.8;">
-    <div class="upd-v" style="font-size: 1.4rem;">v1.0: LANÇAMENTO!</div>
-    <b class="upd-topic">• CRÍTICO!</b>
-    <span class="upd-sub">Chance de 1% ganhar 100x click por 3s!</span>
-    <b class="upd-topic">• NOVOS UPGRADES!</b>
-    <span class="upd-sub">Multiplicadores de clique e passivo adicionados!</span>
-    <b class="upd-topic">• RANKS!</b>
-    <span class="upd-sub">12 Ranks para conquistar!</span>
-    <b class="upd-topic">• AUTO-SAVE!</b>
-    <span class="upd-sub">Sistema de salvar progresso!</span>
 </div>
 
+<div id="scr-game" class="screen hidden">
+    <div id="g-rank" style="font-weight:900;letter-spacing:4px;color:var(--neon-yellow)">RANK: NADA</div>
+    <div id="g-pts" style="font-size:3.5rem;font-weight:900;">0 PR</div>
+    <div id="comet-timer"></div>
+    <div class="clicker-area">
+        <div class="clicker-bg"></div>
+        <div id="core-clicker" onclick="add(event)">CLICK!</div>
+    </div>
+    <div class="upgrades-container">
+        <div class="up-card" id="up-click" onclick="buyUpgrade('click')"><b id="un-click">Poder de Clique</b><span id="uc-click">Custo: 15 PR</span></div>
+        <div class="up-card" id="up-auto" onclick="buyUpgrade('auto')"><b id="un-auto">Ganho Passivo</b><span id="uc-auto">Custo: 50 PR</span></div>
+        <div class="up-card" id="up-x2click" onclick="buyUpgrade('x2click')"><b>x2 Clicks</b><span id="uc-x2click">Custo: 50k PR</span></div>
+        <div class="up-card" id="up-x5click" onclick="buyUpgrade('x5click')"><b>x5 Clicks (OP)</b><span id="uc-x5click">Custo: 1M PR</span></div>
+        <div class="up-card" id="up-x10click" onclick="buyUpgrade('x10click')"><b>x10 Clicks</b><span id="uc-x10click">Custo: 25M PR</span></div>
+        <div class="up-card" id="up-x100click" onclick="buyUpgrade('x100click')"><b>x100 Clicks (OP)</b><span id="uc-x100click">Custo: 1B PR</span></div>
+        <div class="up-card" id="up-x2auto" onclick="buyUpgrade('x2auto')"><b id="un-x2auto">x2 Ganho Passivo</b><span id="uc-x2auto">Custo: 100k PR</span></div>
+        <div class="up-card" id="up-x10auto" onclick="buyUpgrade('x10auto')"><b id="un-x10auto">x10 Ganho Passivo</b><span id="uc-x10auto">Custo: 10B PR</span></div>
+        <div class="up-card" id="up-cometspd" onclick="buyUpgrade('cometspd')"><b id="un-cometspd">⚡ Reduzir Intervalo</b><span id="uc-cometspd">Custo: 1T PR</span></div>
+        <div class="up-card" id="up-cometauto" onclick="buyUpgrade('cometauto')"><b id="un-cometauto">🤖 Auto-Cometa</b><span id="uc-cometauto">Custo: 100T PR</span></div>
+    </div>
+    <button class="btn-neon" id="btn-prestige" onclick="doPrestige()">⭐ PRESTÍGIO</button>
+    <button class="btn-neon" id="btn-exit" onclick="nav('scr-home')" style="border-color:var(--neon-pink);color:var(--neon-pink)">SAIR</button>
+</div>
 
+<div id="scr-ranks" class="screen hidden" style="color:var(--neon-blue) !important;">
+    <h2 class="aba-titulo" id="t-ranks">RANKS</h2>
+    <div class="neon-modal" style="border-color:currentColor;"><div id="ranks-list"></div></div>
+    <button class="btn-neon btn-back" id="back-ranks" onclick="nav('scr-home')">VOLTAR</button>
+</div>
+
+<div id="scr-upd" class="screen hidden" style="color:var(--neon-pink) !important;">
+    <h2 class="aba-titulo" id="t-upd">ATUALIZAÇÕES</h2>
+    <div class="neon-modal" style="border-color:currentColor;" id="upd-content"></div>
+    <button class="btn-neon btn-back" id="back-upd" onclick="nav('scr-home')">VOLTAR</button>
+</div>
+
+<div id="scr-sets" class="screen hidden" style="color:var(--neon-green) !important;">
+    <h2 class="aba-titulo" id="t-sets">CONFIGURAÇÕES</h2>
+    <div class="neon-modal" style="border-color:currentColor;">
+        <div class="row-item"><span id="s-lang-label">Idioma</span><button class="btn-toggle btn-on" id="b-lang" onclick="changeLang()">Português</button></div>
+        <div class="row-item"><span id="s-suf-label">Sufixos</span><button class="btn-toggle btn-on" onclick="tExclusive('suf')" id="b-suf">ON</button></div>
+        <div class="row-item"><span id="s-sci-label">Notação científica</span><button class="btn-toggle btn-off" onclick="tExclusive('sci')" id="b-sci">OFF</button></div>
+    </div>
+    <button class="btn-neon btn-back" id="back-sets" onclick="nav('scr-home')">VOLTAR</button>
+</div>
+
+<div id="scr-about" class="screen hidden" style="color:#ffcc00 !important;">
+    <h2 class="aba-titulo" id="t-about">SOBRE O JOGO</h2>
+    <div class="neon-modal" style="border-color:currentColor;"><p id="about-text" style="font-size:1.1rem;line-height:1.6;"></p></div>
+    <button class="btn-neon btn-back" id="back-about" onclick="nav('scr-home')">VOLTAR</button>
+</div>
+
+<div id="scr-dsc" class="screen hidden" style="color:#7289da !important;">
+    <h2 class="aba-titulo" id="t-dsc">DISCORD</h2>
+    <div class="neon-modal" style="border-color:currentColor;justify-content:center;"><p id="dsc-text" style="text-align:center;"></p></div>
+    <button class="btn-neon btn-back" id="back-dsc" onclick="nav('scr-home')">VOLTAR</button>
+</div>
+
+<div id="scr-crd" class="screen hidden">
+    <h2 class="aba-titulo" id="t-crd">CRÉDITOS</h2>
+    <div class="neon-modal">
+        <div style="text-align:center;flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:10px;">
+            <p id="crd-dev" style="margin:0;"></p>
+            <p id="crd-design" style="margin:0;"></p>
+            <p id="crd-tech" style="margin-top:15px;color:#888;"></p>
         </div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
     </div>
+    <button class="btn-neon btn-back" id="back-crd" onclick="nav('scr-home')">VOLTAR</button>
+</div>
 
-    <div id="scr-sets" class="screen hidden" style="color: var(--neon-green) !important;">
-        <h2 class="aba-titulo">CONFIGURAÇÕES</h2>
-        <div class="neon-modal" style="border-color: currentColor;">
-            <div class="row-item"><span>Idioma</span><button class="btn-toggle btn-on" id="b-lang">Português</button></div>
-            <div class="row-item"><span>Sufixos</span><button class="btn-toggle btn-on" onclick="tExclusive('suf')" id="b-suf">ON</button></div>
-            <div class="row-item"><span>Notação científica</span><button class="btn-toggle btn-off" onclick="tExclusive('sci')" id="b-sci">OFF</button></div>
-        </div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
-    </div>
+<script>
+let pts=0,prestigeCount=0,prestigeBonus=1;
+let lang="PT";
+let cfg={suf:true,sci:false};
+let isFrenzy=false,prevRankIdx=0;
 
-    <div id="scr-about" class="screen hidden" style="color: #ffcc00 !important;">
-        <h2 class="aba-titulo">SOBRE O JOGO</h2>
-        <div class="neon-modal" style="border-color: currentColor;">
-            <p style="font-size:1.1rem; line-height:1.6;">RANKS! é um jogo incremental focado na progressão constante. Clique, evolua seus ganhos e tente alcançar o Rank Creation!<br><br><b>Pr</b> = Pontos de Rank.</p>
-        </div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
-    </div>
+// Comet interval: starts at 5 min (300s), each upgrade reduces by /1.3
+// Levels: 0=300s, 1=230.8s, 2=177.5s, ...
+let cometSpdLvl=0;
+const COMET_BASE_INTERVAL=300; // seconds
+let cometAutoOwned=false;
+let cometAutoActive=false;
+let nextCometIn=0; // countdown seconds
+let cometCountdownTimer=null;
 
-    <div id="scr-dsc" class="screen hidden" style="color: #7289da !important;">
-        <h2 class="aba-titulo">DISCORD</h2>
-        <div class="neon-modal" style="border-color: currentColor; justify-content:center;"><p style="text-align:center;">Servidor do Discord disponível em breve para a comunidade!</p></div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
-    </div>
+// Comet speed upgrade costs: 1T * 1.3^n
+const COMET_SPD_BASE_COST=1e12;
+function getCometSpdCost(lvl){ return COMET_SPD_BASE_COST*Math.pow(1.3,lvl); }
+function getCometInterval(lvl){ return COMET_BASE_INTERVAL/Math.pow(1.3,lvl); }
 
-    <div id="scr-crd" class="screen hidden">
-        <h2 class="aba-titulo">CRÉDITOS</h2>
-        <div class="neon-modal">
-            <div style="text-align:center; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-                <p><b>Designer, Product Manager e Lead Developer:</b> Matts.js</p>
-                <p style="margin-top:15px; color:#888;">Desenvolvido com HTML, CSS e JavaScript puro.</p>
-            </div>
-        </div>
-        <button class="btn-neon btn-back" onclick="nav('scr-home')">VOLTAR</button>
-    </div>
+let upg={
+    clickLvl:1,clickCost:15,
+    autoLvl:0,autoCost:50,
+    multClick:1,x2cCost:50000,x2cOwned:false,
+    multClickOP:1,x5cCost:1000000,x5cOwned:false,
+    multClickX10:1,x10cCost:25000000,x10cOwned:false,
+    multClickX100:1,x100cCost:1000000000,x100cOwned:false,
+    multAuto:1,x2aCost:100000,x2aOwned:false,
+    multAuto10:1,x10aCost:10000000000,x10aOwned:false
+};
 
-    <script>
-        let pts = 0;
-        let lang = "PT";
-        let cfg = { suf: true, sci: false };
-        let isFrenzy = false;
-        let upg = { 
-            clickLvl: 1, clickCost: 15, 
-            autoLvl: 0, autoCost: 50,
-            multClick: 1, x2cCost: 50000, x2cOwned: false,
-            multClickOP: 1, x5cCost: 1000000, x5cOwned: false,
-            multClickX10: 1, x10cCost: 25000000, x10cOwned: false,
-            multClickX100: 1, x100cCost: 1000000000, x100cOwned: false,
-            multAuto: 1, x2aCost: 100000, x2aOwned: false
-        };
+// ---- RANKS ----
+const rData=[
+    {pt:"Nada",      en:"None",        es:"Nada",       v:0,              c:"#888",    vfx:null},
+    {pt:"Bronze",    en:"Bronze",      es:"Bronce",     v:10,             c:"#cd7f32", vfx:{color:"#cd7f32",shape:"circle"}},
+    {pt:"Prata",     en:"Silver",      es:"Plata",      v:50,             c:"#c0c0c0", vfx:{color:"#c0c0c0",shape:"circle"}},
+    {pt:"Ouro",      en:"Gold",        es:"Oro",        v:100,            c:"#ffd700", vfx:{color:"#ffd700",shape:"star"}},
+    {pt:"Diamante",  en:"Diamond",     es:"Diamante",   v:1000,           c:"#b9f2ff", vfx:{color:"#b9f2ff",shape:"diamond"}},
+    {pt:"Platina",   en:"Platinum",    es:"Platino",    v:10000,          c:"#e5e4e2", vfx:{color:"#e5e4e2",shape:"circle"}},
+    {pt:"Esmeralda", en:"Emerald",     es:"Esmeralda",  v:100000,         c:"#50c878", vfx:{color:"#50c878",shape:"star"}},
+    {pt:"Rubi",      en:"Ruby",        es:"Rubí",       v:1000000,        c:"#e0115f", vfx:{color:"#e0115f",shape:"circle"}},
+    {pt:"Adamantium",en:"Adamantium",  es:"Adamantio",  v:10000000,       c:"#aaaaaa", vfx:{color:"#aaa",   shape:"diamond"}},
+    {pt:"Cosmic",    en:"Cosmic",      es:"Cósmico",    v:100000000,      c:"#6a5acd", vfx:{color:"#bc13fe",shape:"star"}},
+    {pt:"Remnant",   en:"Remnant",     es:"Remanente",  v:1000000000,     c:"#ff00ff", vfx:{color:"#ff00ff",shape:"star"}},
+    {pt:"Creation",  en:"Creation",    es:"Creación",   v:10000000000,    c:"#fff",    vfx:{color:"#fff",   shape:"star"}},
+    {pt:"Multiversal",en:"Multiversal",es:"Multiversal",v:765000000000,   c:"#00ffe0", vfx:{color:"#00ffe0",shape:"star"},prestige:true},
+    {pt:"Aurora",    en:"Aurora",      es:"Aurora",     v:5110000000000,  c:"#ff88cc", vfx:{color:"#ff88cc",shape:"star"},prestige:true},
+    {pt:"Central",   en:"Central",     es:"Central",    v:56200000000000, c:"#ffdd00", vfx:{color:"#ffdd00",shape:"diamond"},prestige:true},
+    {pt:"Apatheia",  en:"Apatheia",    es:"Apatheia",   v:1.45e15,        c:"#cc88ff", vfx:{color:"#cc88ff",shape:"star"},prestige:true},
+    {pt:"Opala",     en:"Opal",        es:"Ópalo",      v:1e18,           c:"#ff6600", vfx:{color:"#ff6600",shape:"star"},prestige:true}
+];
 
-        const rData = [
-            { pt: "Nada", en: "None", v: 0, c: "#888" },
-            { pt: "Bronze", en: "Bronze", v: 10, c: "#cd7f32" },
-            { pt: "Prata", en: "Silver", v: 50, c: "#c0c0c0" },
-            { pt: "Ouro", en: "Gold", v: 100, c: "#ffd700" },
-            { pt: "Diamante", en: "Diamond", v: 1000, c: "#b9f2ff" },
-            { pt: "Platina", en: "Platinum", v: 10000, c: "#e5e4e2" },
-            { pt: "Esmeralda", en: "Emerald", v: 100000, c: "#50c878" },
-            { pt: "Rubi", en: "Ruby", v: 1000000, c: "#e0115f" },
-            { pt: "Adamantium", en: "Adamantium", v: 10000000, c: "#707070" },
-            { pt: "Cosmic", en: "Cosmic", v: 100000000, c: "#6a5acd" },
-            { pt: "Remnant", en: "Remnant", v: 1000000000, c: "#ff00ff" },
-            { pt: "Creation", en: "Creation", v: 10000000000, c: "#fff" }
-        ];
+// ---- UPDATE CONTENT ----
+function v2Block(l){
+    return {
+PT:`<div class="upd-v">v2.0: Atualização gigante!</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• 5 novos Ranks!</b>
+<span class="upd-sub">Confira eles na aba de Ranks!</span>
+<b class="upd-topic">• Camada de reset!</b>
+<span class="upd-sub">Adicionado o Prestígio, que reseta o jogo por bônus permanentes!</span>
+<b class="upd-topic">• Novos upgrades</b>
+<span class="upd-sub">x10 Ganho Passivo!</span>
+<span class="upd-sub">x5 Clicks!</span>
+<b class="upd-topic">• Nerf Frenzy!</b>
+<span class="upd-sub">Nerfado o Frenzy (100x→50x), passando um cometa para ativá-lo, deixando por 30 segundos o Boost!</span>
+<b class="upd-topic">• Mini recodificação!</b>
+<span class="upd-sub">Pequena recodificação no jogo para arrumar bugs!</span>
+<b class="upd-topic">• Novos idiomas!</b>
+<span class="upd-sub">Adicionados os idiomas Inglês e Espanhol, confira-os na aba Configurações!</span>
+<b class="upd-topic">• Entre muitas outras coisas!</b>`,
+EN:`<div class="upd-v">v2.0: Giant update!</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• 5 new Ranks!</b>
+<span class="upd-sub">Check them in the Ranks tab!</span>
+<b class="upd-topic">• Prestige layer!</b>
+<span class="upd-sub">Prestige added — reset your game for permanent bonuses!</span>
+<b class="upd-topic">• New upgrades</b>
+<span class="upd-sub">x10 Passive Income!</span>
+<span class="upd-sub">x5 Clicks!</span>
+<b class="upd-topic">• Frenzy nerf!</b>
+<span class="upd-sub">Frenzy nerfed (100x→50x), a comet now triggers it, lasting 30 seconds!</span>
+<b class="upd-topic">• Mini recode!</b>
+<span class="upd-sub">Small recode to fix bugs!</span>
+<b class="upd-topic">• New languages!</b>
+<span class="upd-sub">English and Spanish added, check them in Settings!</span>
+<b class="upd-topic">• And much more!</b>`,
+ES:`<div class="upd-v">v2.0: ¡Actualización gigante!</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• ¡5 nuevos Rangos!</b>
+<span class="upd-sub">¡Consúltalos en la pestaña de Rangos!</span>
+<b class="upd-topic">• ¡Capa de reinicio!</b>
+<span class="upd-sub">¡Prestigio añadido, reinicia el juego por bonificaciones permanentes!</span>
+<b class="upd-topic">• Nuevas mejoras</b>
+<span class="upd-sub">¡x10 Ingreso Pasivo!</span>
+<span class="upd-sub">¡x5 Clics!</span>
+<b class="upd-topic">• ¡Nerf al Frenzy!</b>
+<span class="upd-sub">¡Frenzy nerfado (100x→50x), un cometa lo activa, durando 30 segundos!</span>
+<b class="upd-topic">• ¡Mini recodificación!</b>
+<span class="upd-sub">¡Pequeña recodificación para arreglar errores!</span>
+<b class="upd-topic">• ¡Nuevos idiomas!</b>
+<span class="upd-sub">¡Inglés y Español añadidos, consúltalos en Configuración!</span>
+<b class="upd-topic">• ¡Y mucho más!</b>`
+    }[l];
+}
 
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
+function oldBlock(l){
+    const sep='<div class="divider-sep"></div>';
+    return {
+PT:`${sep}<div class="upd-v">v1.0.5: Correções</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• Correção de bugs</b><span class="upd-sub">Melhoria no sistema de scroll e cliques.</span>
+<b class="upd-topic">• Título reduzido</b><span class="upd-sub">Interface ajustada para melhor visibilidade.</span>
+<b class="upd-topic">• Interface modificada</b><span class="upd-sub">Cores dinâmicas e listras neon adicionadas.</span>
+<b class="upd-topic">• Suporte a idiomas</b><span class="upd-sub">Português, Inglês e Espanhol adicionados!</span>
+${sep}<div style="opacity:0.8"><div class="upd-v" style="font-size:1.4rem;">v1.0: Lançamento!</div>
+<b class="upd-topic">• Crítico!</b><span class="upd-sub">Chance de 1% ganhar 100x click por 3s!</span>
+<b class="upd-topic">• Novos upgrades!</b><span class="upd-sub">Multiplicadores de clique e passivo adicionados!</span>
+<b class="upd-topic">• Ranks!</b><span class="upd-sub">12 Ranks para conquistar!</span>
+<b class="upd-topic">• Auto-save!</b><span class="upd-sub">Sistema de salvar progresso!</span></div>`,
+EN:`${sep}<div class="upd-v">v1.0.5: Fixes</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• Bug fixes</b><span class="upd-sub">Improved scroll and click system.</span>
+<b class="upd-topic">• Reduced title</b><span class="upd-sub">Interface adjusted for better visibility.</span>
+<b class="upd-topic">• Modified interface</b><span class="upd-sub">Dynamic colors and neon stripes added.</span>
+<b class="upd-topic">• Language support</b><span class="upd-sub">Portuguese, English and Spanish added!</span>
+${sep}<div style="opacity:0.8"><div class="upd-v" style="font-size:1.4rem;">v1.0: Launch!</div>
+<b class="upd-topic">• Critical!</b><span class="upd-sub">1% chance to earn 100x click for 3s!</span>
+<b class="upd-topic">• New upgrades!</b><span class="upd-sub">Click and passive multipliers added!</span>
+<b class="upd-topic">• Ranks!</b><span class="upd-sub">12 Ranks to conquer!</span>
+<b class="upd-topic">• Auto-save!</b><span class="upd-sub">Progress saving system!</span></div>`,
+ES:`${sep}<div class="upd-v">v1.0.5: Correcciones</div>
+<div class="divider-pink"></div>
+<b class="upd-topic">• Corrección de errores</b><span class="upd-sub">Mejora en el sistema de scroll y clics.</span>
+<b class="upd-topic">• Título reducido</b><span class="upd-sub">Interfaz ajustada para mejor visibilidad.</span>
+<b class="upd-topic">• Interfaz modificada</b><span class="upd-sub">Colores dinámicos y rayas neón añadidas.</span>
+<b class="upd-topic">• Soporte de idiomas</b><span class="upd-sub">¡Portugués, Inglés y Español añadidos!</span>
+${sep}<div style="opacity:0.8"><div class="upd-v" style="font-size:1.4rem;">v1.0: ¡Lanzamiento!</div>
+<b class="upd-topic">• ¡Crítico!</b><span class="upd-sub">¡1% de probabilidad de ganar 100x clic por 3s!</span>
+<b class="upd-topic">• ¡Nuevas mejoras!</b><span class="upd-sub">¡Multiplicadores de clic y pasivo añadidos!</span>
+<b class="upd-topic">• ¡Rangos!</b><span class="upd-sub">¡12 Rangos para conquistar!</span>
+<b class="upd-topic">• ¡Guardado automático!</b><span class="upd-sub">¡Sistema de guardar progreso!</span></div>`
+    }[l];
+}
+
+// ---- STRINGS ----
+const strings={
+PT:{
+    play:"JOGAR",ranks:"RANKS",upd:"ATUALIZAÇÕES",sets:"CONFIGURAÇÕES",about:"SOBRE O JOGO",discord:"DISCORD",crd:"CRÉDITOS",
+    rank:"RANK:",langLabel:"Idioma",sufLabel:"Sufixos",sciLabel:"Notação científica",
+    back:"VOLTAR",exit:"SAIR",
+    tRanks:"RANKS",tUpd:"ATUALIZAÇÕES",tSets:"CONFIGURAÇÕES",tAbout:"SOBRE O JOGO",tDsc:"DISCORD",tCrd:"CRÉDITOS",
+    langName:"Português",
+    upNameClick:"Poder de Clique",upNameAuto:"Ganho Passivo",upNameX2Auto:"x2 Ganho Passivo",upNameX10Auto:"x10 Ganho Passivo",
+    upNameCometSpd:"⚡ Reduzir Intervalo",upNameCometAuto:"🤖 Auto-Cometa",
+    upCost:"Custo:",upBought:"COMPRADO",
+    prestige:"⭐ PRESTÍGIO",prestigeInfo:"Prestígios",prestigeBonus:"Bônus",
+    cometNext:"Próximo cometa em",cometAuto:"Auto-cometa ativo!",
+    aboutText:"RANKS! é um jogo incremental focado na progressão constante. Clique, evolua seus ganhos e tente alcançar o Rank Opala!<br><br><b>PR</b> = Pontos de Rank.<br><br><b>Prestígio</b>: ao atingir 10T PR, você pode resetar e ganhar multiplicador permanente de x1.5!<br><br><b>Cometa</b>: passe o cometa a cada 5 minutos para ativar o Frenzy 50x por 30 segundos! Compre upgrades para reduzir o intervalo ou automatizar.",
+    dscText:"Servidor do Discord disponível em breve para a comunidade!",
+    devText:"Desenvolvedores: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Desenvolvido com HTML, CSS e JavaScript puro.",
+    rankup:"RANK UP!"
+},
+EN:{
+    play:"PLAY",ranks:"RANKS",upd:"UPDATES",sets:"SETTINGS",about:"ABOUT",discord:"DISCORD",crd:"CREDITS",
+    rank:"RANK:",langLabel:"Language",sufLabel:"Suffixes",sciLabel:"Scientific notation",
+    back:"BACK",exit:"EXIT",
+    tRanks:"RANKS",tUpd:"UPDATES",tSets:"SETTINGS",tAbout:"ABOUT",tDsc:"DISCORD",tCrd:"CREDITS",
+    langName:"English",
+    upNameClick:"Click Power",upNameAuto:"Passive Income",upNameX2Auto:"x2 Passive Income",upNameX10Auto:"x10 Passive Income",
+    upNameCometSpd:"⚡ Reduce Interval",upNameCometAuto:"🤖 Auto-Comet",
+    upCost:"Cost:",upBought:"PURCHASED",
+    prestige:"⭐ PRESTIGE",prestigeInfo:"Prestiges",prestigeBonus:"Bonus",
+    cometNext:"Next comet in",cometAuto:"Auto-comet active!",
+    aboutText:"RANKS! is an incremental game focused on constant progression. Click, evolve your earnings and try to reach Opal Rank!<br><br><b>PR</b> = Rank Points.<br><br><b>Prestige</b>: reach 10T PR, reset and gain a permanent x1.5 multiplier!<br><br><b>Comet</b>: catch the comet every 5 minutes to activate Frenzy 50x for 30 seconds! Buy upgrades to reduce the interval or automate it.",
+    dscText:"Discord server coming soon for the community!",
+    devText:"Developers: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Developed with pure HTML, CSS and JavaScript.",
+    rankup:"RANK UP!"
+},
+ES:{
+    play:"JUGAR",ranks:"RANGOS",upd:"ACTUALIZACIONES",sets:"CONFIGURACIÓN",about:"SOBRE",discord:"DISCORD",crd:"CRÉDITOS",
+    rank:"RANGO:",langLabel:"Idioma",sufLabel:"Sufijos",sciLabel:"Notación científica",
+    back:"VOLVER",exit:"SALIR",
+    tRanks:"RANGOS",tUpd:"ACTUALIZACIONES",tSets:"CONFIGURACIÓN",tAbout:"SOBRE",tDsc:"DISCORD",tCrd:"CRÉDITOS",
+    langName:"Español",
+    upNameClick:"Poder de Clic",upNameAuto:"Ingreso Pasivo",upNameX2Auto:"x2 Ingreso Pasivo",upNameX10Auto:"x10 Ingreso Pasivo",
+    upNameCometSpd:"⚡ Reducir Intervalo",upNameCometAuto:"🤖 Auto-Cometa",
+    upCost:"Costo:",upBought:"COMPRADO",
+    prestige:"⭐ PRESTIGIO",prestigeInfo:"Prestigios",prestigeBonus:"Bono",
+    cometNext:"Próximo cometa en",cometAuto:"¡Auto-cometa activo!",
+    aboutText:"¡RANKS! es un juego incremental enfocado en la progresión constante. ¡Haz clic, evoluciona tus ganancias e intenta alcanzar el Rango Ópalo!<br><br><b>PR</b> = Puntos de Rango.<br><br><b>Prestigio</b>: al llegar a 10T PR, reinicia y gana un multiplicador permanente de x1.5!<br><br><b>Cometa</b>: ¡atrapa el cometa cada 5 minutos para activar Frenzy 50x por 30 segundos! Compra mejoras para reducir el intervalo o automatizarlo.",
+    dscText:"¡El servidor de Discord llegará pronto para la comunidad!",
+    devText:"Desarrolladores: Arthur.py, Matts.js",designText:"Diseñador: Matts.js",techText:"Desarrollado con HTML, CSS y JavaScript puro.",
+    rankup:"¡RANGO UP!"
+}
+};
+
+// ---- AUDIO ----
+let actx=null;
+function gc(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
+function beep(f,t,d,v){try{const c=gc(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v||0.1,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+d);o.start();o.stop(c.currentTime+d);}catch(e){}}
+function playClick(){try{const c=gc(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.exponentialRampToValueAtTime(440,c.currentTime+0.07);g.gain.setValueAtTime(0.12,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.09);o.start();o.stop(c.currentTime+0.09);}catch(e){}}
+function playFrenzy(){[523,659,784,1047].forEach((f,i)=>{setTimeout(()=>beep(f,'sawtooth',0.12,0.08),i*70);});}
+function playRankUp(){[523,659,784,1047,1319].forEach((f,i)=>{setTimeout(()=>beep(f,'triangle',0.18,0.1),i*90);});}
+function playBuy(){try{const c=gc(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.setValueAtTime(440,c.currentTime);o.frequency.exponentialRampToValueAtTime(880,c.currentTime+0.12);g.gain.setValueAtTime(0.1,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.14);o.start();o.stop(c.currentTime+0.14);}catch(e){}}
+function playPrestige(){[261,329,392,523,659,784,1047].forEach((f,i)=>{setTimeout(()=>beep(f,'sine',0.25,0.09),i*65);});}
+
+// ---- GALAXY BG ----
+(function(){
+    const canvas=document.getElementById('galaxy-canvas');
+    const ctx=canvas.getContext('2d');
+    let stars=[],nebula=[];
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;init();}
+    function init(){
+        stars=[];
+        for(let i=0;i<200;i++)stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.3+0.2,tw:Math.random()*Math.PI*2,spd:Math.random()*0.004+0.001});
+        nebula=[];
+        const cols=['rgba(50,0,110,','rgba(0,25,70,','rgba(70,0,50,','rgba(0,50,70,'];
+        for(let i=0;i<7;i++)nebula.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:70+Math.random()*130,c:cols[i%cols.length],a:0.035+Math.random()*0.055});
+    }
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        nebula.forEach(n=>{const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);g.addColorStop(0,n.c+n.a+')');g.addColorStop(1,n.c+'0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();});
+        stars.forEach(s=>{s.tw+=s.spd;const a=0.25+0.65*Math.abs(Math.sin(s.tw));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${a*0.45})`;ctx.fill();});
+        requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize',resize);
+    resize();draw();
+})();
+
+// ---- COMET SYSTEM ----
+let cometTimer=null;
+function startCometCountdown(){
+    if(cometCountdownTimer) clearInterval(cometCountdownTimer);
+    nextCometIn=Math.round(getCometInterval(cometSpdLvl));
+    cometCountdownTimer=setInterval(()=>{
+        nextCometIn--;
+        if(nextCometIn<=0){
+            nextCometIn=Math.round(getCometInterval(cometSpdLvl));
+            spawnComet();
         }
+        updateCometTimer();
+    },1000);
+}
 
-        function showRanks() {
-            const list = document.getElementById('ranks-list');
-            list.innerHTML = rData.map(r => `
-                <div class="row-item" style="color:${r.c}">
-                    <span>${r.pt.toUpperCase()}</span>
-                    <span>${formatValue(r.v)} PR</span>
-                </div>
-            `).join('');
-            nav('scr-ranks');
-        }
+function updateCometTimer(){
+    const el=document.getElementById('comet-timer');
+    if(!el) return;
+    const s=strings[lang];
+    if(cometAutoOwned){
+        el.innerText=s.cometAuto;
+    } else {
+        const m=Math.floor(nextCometIn/60), sec=nextCometIn%60;
+        el.innerText=s.cometNext+': '+(m>0?m+'m ':'')+sec+'s';
+    }
+}
 
-        function save() { localStorage.setItem('ng_save', JSON.stringify({ pts, upg, cfg, lang })); }
-        
-        function load() {
-            let s = localStorage.getItem('ng_save');
-            if(s) {
-                let d = JSON.parse(s);
-                pts = isNaN(d.pts) ? 0 : d.pts;
-                cfg = d.cfg || cfg;
-                lang = d.lang || "PT";
-                if(d.upg) {
-                    for(let key in upg) {
-                        if(d.upg[key] !== undefined && !isNaN(d.upg[key])) {
-                            upg[key] = d.upg[key];
-                        }
-                    }
-                }
-                updateToggles(); upd();
-            }
-        }
+function spawnComet(){
+    const el=document.createElement('div');
+    el.className='comet'+(cometAutoOwned?'':' clickable');
+    const top=5+Math.random()*60;
+    el.style.top=top+'vh';
+    el.style.left='-200px';
+    // calculate duration so it always crosses the screen
+    const duration=1.1;
+    el.style.animation=`cometFly ${duration}s ease-in forwards`;
+    document.body.appendChild(el);
+    if(cometAutoOwned){
+        // auto-trigger frenzy immediately
+        el.addEventListener('animationend',()=>{el.remove();triggerFrenzy();});
+    } else {
+        el.addEventListener('click',()=>{el.remove();triggerFrenzy();});
+        el.addEventListener('animationend',()=>{el.remove();});
+    }
+}
 
-        function add(e) { 
-            let rand = Math.random();
-            if (!isFrenzy && rand < 0.01) {
-                isFrenzy = true;
-                document.getElementById('core-clicker').classList.add('frenzy');
-                setTimeout(() => {
-                    isFrenzy = false;
-                    document.getElementById('core-clicker').classList.remove('frenzy');
-                }, 3000);
-            }
+function triggerFrenzy(){
+    if(isFrenzy) return;
+    isFrenzy=true;
+    const btn=document.getElementById('core-clicker');
+    btn.classList.add('frenzy');
+    playFrenzy();
+    setTimeout(()=>{isFrenzy=false;btn.classList.remove('frenzy');},30000);
+}
 
-            let mC = upg.multClick || 1;
-            let mCOP = upg.multClickOP || 1;
-            let mCX10 = upg.multClickX10 || 1;
-            let mCX100 = upg.multClickX100 || 1;
-            
-            let baseGain = (upg.clickLvl || 1) * mC * mCOP * mCX10 * mCX100;
-            let finalGain = isFrenzy ? baseGain * 100 : baseGain;
-            
-            pts += finalGain; 
-            showPop(e, finalGain, isFrenzy);
-            upd(); save();
-        }
-
-        function showPop(e, val, crit) {
-            let p = document.createElement('div');
-            p.className = 'pop';
-            p.innerText = "+" + formatValue(val) + (crit ? " FRENZY!" : "");
-            if(crit) p.style.color = "var(--neon-pink)";
-            p.style.left = (e.clientX || window.innerWidth/2) + 'px';
-            p.style.top = (e.clientY || window.innerHeight/2) + 'px';
+// ---- RANK VFX ----
+function spawnRankVFX(color,shape){
+    for(let i=0;i<28;i++){
+        setTimeout(()=>{
+            const p=document.createElement('div');
+            p.className='rank-vfx-particle';
+            const size=5+Math.random()*10;
+            p.style.cssText=`width:${size}px;height:${size}px;left:${20+Math.random()*60}vw;top:${30+Math.random()*40}vh;background:${color};box-shadow:0 0 ${size*2}px ${color};animation-duration:${1.2+Math.random()*1.2}s;animation-delay:${Math.random()*0.3}s;`;
+            if(shape==='star'||shape==='diamond') p.style.borderRadius='0';
+            if(shape==='star'||shape==='diamond') p.style.transform='rotate(45deg)';
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 600);
-        }
+            setTimeout(()=>p.remove(),2600);
+        },i*30);
+    }
+}
 
-        function buyUpgrade(type) {
-            if (type === 'click' && pts >= upg.clickCost) {
-                pts -= upg.clickCost; upg.clickLvl++; upg.clickCost = Math.floor(upg.clickCost * 1.8);
-            } else if (type === 'auto' && pts >= upg.autoCost) {
-                pts -= upg.autoCost; upg.autoLvl++; upg.autoCost = Math.floor(upg.autoCost * 2.2);
-            } else if (type === 'x2click' && pts >= upg.x2cCost && !upg.x2cOwned) {
-                pts -= upg.x2cCost; upg.multClick = 2; upg.x2cOwned = true;
-            } else if (type === 'x5click' && pts >= upg.x5cCost && !upg.x5cOwned) {
-                pts -= upg.x5cCost; upg.multClickOP = 5; upg.x5cOwned = true;
-            } else if (type === 'x10click' && pts >= upg.x10cCost && !upg.x10cOwned) {
-                pts -= upg.x10cCost; upg.multClickX10 = 10; upg.x10cOwned = true;
-            } else if (type === 'x100click' && pts >= upg.x100cCost && !upg.x100cOwned) {
-                pts -= upg.x100cCost; upg.multClickX100 = 100; upg.x100cOwned = true;
-            } else if (type === 'x2auto' && pts >= upg.x2aCost && !upg.x2aOwned) {
-                pts -= upg.x2aCost; upg.multAuto = 2; upg.x2aOwned = true;
-            }
-            upd(); save();
-        }
+// ---- RANK UP BANNER ----
+function showRankBanner(name,color){
+    const b=document.getElementById('rankup-banner');
+    b.innerText=strings[lang].rankup+' '+name.toUpperCase();
+    b.style.color=color;b.style.borderColor=color;b.style.boxShadow=`0 0 30px ${color}`;
+    b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
+    setTimeout(()=>b.classList.remove('show'),2300);
+}
 
-        setInterval(() => { 
-            if (upg.autoLvl > 0) { 
-                let mA = upg.multAuto || 1;
-                pts += (upg.autoLvl * mA); 
-                upd(); 
-            } 
-        }, 1000);
+// ---- CORE GAME ----
+function getLang(){return lang==="PT"?"pt":lang==="EN"?"en":"es";}
 
-        function tExclusive(k) {
-            if (k === 'suf') { cfg.suf = !cfg.suf; cfg.sci = !cfg.suf; }
-            else { cfg.sci = !cfg.sci; cfg.suf = !cfg.sci; }
-            updateToggles(); upd(); save();
-        }
+function add(e){
+    playClick();
+    let base=(upg.clickLvl||1)*(upg.multClick||1)*(upg.multClickOP||1)*(upg.multClickX10||1)*(upg.multClickX100||1)*prestigeBonus;
+    let gain=isFrenzy?base*50:base;
+    pts+=gain;showPop(e,gain,isFrenzy);upd();save();
+}
 
-        function updateToggles() {
-            document.getElementById('b-suf').innerText = cfg.suf ? "ON" : "OFF";
-            document.getElementById('b-suf').className = "btn-toggle " + (cfg.suf ? "btn-on" : "btn-off");
-            document.getElementById('b-sci').innerText = cfg.sci ? "ON" : "OFF";
-            document.getElementById('b-sci').className = "btn-toggle " + (cfg.sci ? "btn-on" : "btn-off");
-        }
+function showPop(e,val,crit){
+    const p=document.createElement('div');
+    p.className='pop';
+    p.innerText='+'+(crit?'FRENZY! ':'')+formatValue(val)+' PR';
+    if(crit){p.style.color='var(--neon-pink)';p.style.fontSize='1.3rem';}
+    p.style.left=(e.clientX||window.innerWidth/2)+'px';
+    p.style.top=(e.clientY||window.innerHeight/2)+'px';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),700);
+}
 
-        function formatValue(val) {
-            if (isNaN(val)) return "0";
-            if (cfg.sci && val >= 1000) return val.toExponential(2);
-            if (cfg.suf && val >= 1000) {
-                if (val >= 1e12) return (val/1e12).toFixed(1) + "T";
-                if (val >= 1e9) return (val/1e9).toFixed(1) + "B";
-                if (val >= 1e6) return (val/1e6).toFixed(1) + "M";
-                if (val >= 1e3) return (val/1e3).toFixed(1) + "k";
-            }
-            return Math.floor(val).toLocaleString();
-        }
+function buyUpgrade(type){
+    let bought=false;
+    if(type==='click'&&pts>=upg.clickCost){pts-=upg.clickCost;upg.clickLvl++;upg.clickCost=Math.floor(upg.clickCost*1.8);bought=true;}
+    else if(type==='auto'&&pts>=upg.autoCost){pts-=upg.autoCost;upg.autoLvl++;upg.autoCost=Math.floor(upg.autoCost*2.2);bought=true;}
+    else if(type==='x2click'&&pts>=upg.x2cCost&&!upg.x2cOwned){pts-=upg.x2cCost;upg.multClick=2;upg.x2cOwned=true;bought=true;}
+    else if(type==='x5click'&&pts>=upg.x5cCost&&!upg.x5cOwned){pts-=upg.x5cCost;upg.multClickOP=5;upg.x5cOwned=true;bought=true;}
+    else if(type==='x10click'&&pts>=upg.x10cCost&&!upg.x10cOwned){pts-=upg.x10cCost;upg.multClickX10=10;upg.x10cOwned=true;bought=true;}
+    else if(type==='x100click'&&pts>=upg.x100cCost&&!upg.x100cOwned){pts-=upg.x100cCost;upg.multClickX100=100;upg.x100cOwned=true;bought=true;}
+    else if(type==='x2auto'&&pts>=upg.x2aCost&&!upg.x2aOwned){pts-=upg.x2aCost;upg.multAuto=2;upg.x2aOwned=true;bought=true;}
+    else if(type==='x10auto'&&pts>=upg.x10aCost&&!upg.x10aOwned){pts-=upg.x10aCost;upg.multAuto10=10;upg.x10aOwned=true;bought=true;}
+    else if(type==='cometspd'){
+        const cost=getCometSpdCost(cometSpdLvl);
+        if(pts>=cost){pts-=cost;cometSpdLvl++;startCometCountdown();bought=true;}
+    }
+    else if(type==='cometauto'&&!cometAutoOwned){
+        const cost=100e12;
+        if(pts>=cost){pts-=cost;cometAutoOwned=true;bought=true;}
+    }
+    if(bought) playBuy();
+    upd();save();
+}
 
-        function upd() {
-            document.getElementById('ui-pts').innerText = formatValue(pts) + " PR";
-            document.getElementById('g-pts').innerText = formatValue(pts) + " PR";
-            
-            document.getElementById('uc-click').innerText = "Custo: " + formatValue(upg.clickCost) + " PR";
-            document.getElementById('uc-auto').innerText = "Custo: " + formatValue(upg.autoCost) + " PR";
-            document.getElementById('up-click').className = pts >= upg.clickCost ? "up-card" : "up-card locked";
-            document.getElementById('up-auto').className = pts >= upg.autoCost ? "up-card" : "up-card locked";
+function doPrestige(){
+    if(pts<10e12) return;
+    if(!confirm('Prestígio? Você perderá todos os pontos e upgrades, mas ganhará x1.5 permanente!')) return;
+    playPrestige();
+    pts=0;prestigeCount++;prestigeBonus=Math.pow(1.5,prestigeCount);
+    upg={clickLvl:1,clickCost:15,autoLvl:0,autoCost:50,multClick:1,x2cCost:50000,x2cOwned:false,multClickOP:1,x5cCost:1000000,x5cOwned:false,multClickX10:1,x10cCost:25000000,x10cOwned:false,multClickX100:1,x100cCost:1000000000,x100cOwned:false,multAuto:1,x2aCost:100000,x2aOwned:false,multAuto10:1,x10aCost:10000000000,x10aOwned:false};
+    upd();save();
+}
 
-            document.getElementById('uc-x2click').innerText = upg.x2cOwned ? "COMPRADO" : "Custo: 50k PR";
-            document.getElementById('up-x2click').className = (pts >= upg.x2cCost && !upg.x2cOwned) ? "up-card" : "up-card locked";
-            
-            document.getElementById('uc-x5click').innerText = upg.x5cOwned ? "COMPRADO" : "Custo: 1M PR";
-            document.getElementById('up-x5click').className = (pts >= upg.x5cCost && !upg.x5cOwned) ? "up-card" : "up-card locked";
+setInterval(()=>{
+    if(upg.autoLvl>0){pts+=(upg.autoLvl*(upg.multAuto||1)*(upg.multAuto10||1)*prestigeBonus);upd();}
+},1000);
 
-            document.getElementById('uc-x10click').innerText = upg.x10cOwned ? "COMPRADO" : "Custo: 25M PR";
-            document.getElementById('up-x10click').className = (pts >= upg.x10cCost && !upg.x10cOwned) ? "up-card" : "up-card locked";
+function tExclusive(k){
+    if(k==='suf'){cfg.suf=!cfg.suf;cfg.sci=!cfg.suf;}
+    else{cfg.sci=!cfg.sci;cfg.suf=!cfg.sci;}
+    updateToggles();upd();save();
+}
+function updateToggles(){
+    document.getElementById('b-suf').innerText=cfg.suf?"ON":"OFF";
+    document.getElementById('b-suf').className="btn-toggle "+(cfg.suf?"btn-on":"btn-off");
+    document.getElementById('b-sci').innerText=cfg.sci?"ON":"OFF";
+    document.getElementById('b-sci').className="btn-toggle "+(cfg.sci?"btn-on":"btn-off");
+}
 
-            document.getElementById('uc-x100click').innerText = upg.x100cOwned ? "COMPRADO" : "Custo: 1B PR";
-            document.getElementById('up-x100click').className = (pts >= upg.x100cCost && !upg.x100cOwned) ? "up-card" : "up-card locked";
+function formatValue(val){
+    if(isNaN(val))return"0";
+    if(cfg.sci&&val>=1000)return val.toExponential(2);
+    if(cfg.suf&&val>=1000){
+        if(val>=1e33)return(val/1e33).toFixed(1)+"DC";
+        if(val>=1e30)return(val/1e30).toFixed(1)+"No";
+        if(val>=1e27)return(val/1e27).toFixed(1)+"Oc";
+        if(val>=1e24)return(val/1e24).toFixed(1)+"Sp";
+        if(val>=1e21)return(val/1e21).toFixed(1)+"Sx";
+        if(val>=1e18)return(val/1e18).toFixed(1)+"Qi";
+        if(val>=1e15)return(val/1e15).toFixed(1)+"Qa";
+        if(val>=1e12)return(val/1e12).toFixed(1)+"T";
+        if(val>=1e9)return(val/1e9).toFixed(1)+"B";
+        if(val>=1e6)return(val/1e6).toFixed(1)+"M";
+        if(val>=1e3)return(val/1e3).toFixed(1)+"k";
+    }
+    return Math.floor(val).toLocaleString();
+}
 
-            document.getElementById('uc-x2auto').innerText = upg.x2aOwned ? "COMPRADO" : "Custo: 100k PR";
-            document.getElementById('up-x2auto').className = (pts >= upg.x2aCost && !upg.x2aOwned) ? "up-card" : "up-card locked";
+function upd(){
+    const s=strings[lang];
+    const l=getLang();
+    document.getElementById('ui-pts').innerText=formatValue(pts)+' PR';
+    document.getElementById('g-pts').innerText=formatValue(pts)+' PR';
 
-            let cur = rData[0], next = rData[1];
-            for (let i=0; i<rData.length; i++) { if (pts >= rData[i].v) { cur = rData[i]; next = rData[i+1] || rData[i]; } }
+    // regular upgrades
+    document.getElementById('uc-click').innerText=s.upCost+' '+formatValue(upg.clickCost)+' PR';
+    document.getElementById('uc-auto').innerText=s.upCost+' '+formatValue(upg.autoCost)+' PR';
+    document.getElementById('up-click').className=pts>=upg.clickCost?'up-card':'up-card locked';
+    document.getElementById('up-auto').className=pts>=upg.autoCost?'up-card':'up-card locked';
+    document.getElementById('uc-x2click').innerText=upg.x2cOwned?s.upBought:s.upCost+' 50k PR';
+    document.getElementById('up-x2click').className=(pts>=upg.x2cCost&&!upg.x2cOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-x5click').innerText=upg.x5cOwned?s.upBought:s.upCost+' 1M PR';
+    document.getElementById('up-x5click').className=(pts>=upg.x5cCost&&!upg.x5cOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-x10click').innerText=upg.x10cOwned?s.upBought:s.upCost+' 25M PR';
+    document.getElementById('up-x10click').className=(pts>=upg.x10cCost&&!upg.x10cOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-x100click').innerText=upg.x100cOwned?s.upBought:s.upCost+' 1B PR';
+    document.getElementById('up-x100click').className=(pts>=upg.x100cCost&&!upg.x100cOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-x2auto').innerText=upg.x2aOwned?s.upBought:s.upCost+' 100k PR';
+    document.getElementById('up-x2auto').className=(pts>=upg.x2aCost&&!upg.x2aOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-x10auto').innerText=upg.x10aOwned?s.upBought:s.upCost+' 10B PR';
+    document.getElementById('up-x10auto').className=(pts>=upg.x10aCost&&!upg.x10aOwned)?'up-card':'up-card locked';
 
-            const rTxt = "RANK: " + (lang === "PT" ? cur.pt : cur.en).toUpperCase();
-            document.getElementById('ui-rank').innerText = rTxt;
-            document.getElementById('ui-rank').style.color = cur.c;
-            document.getElementById('g-rank').innerText = rTxt;
-            document.getElementById('g-rank').style.color = cur.c;
+    // comet upgrades
+    const cometCost=getCometSpdCost(cometSpdLvl);
+    const intervalNow=Math.round(getCometInterval(cometSpdLvl));
+    document.getElementById('uc-cometspd').innerText=s.upCost+' '+formatValue(cometCost)+' PR (Nv.'+cometSpdLvl+' → '+(intervalNow<60?intervalNow+'s':Math.round(intervalNow/60)+'m')+')';
+    document.getElementById('up-cometspd').className=pts>=cometCost?'up-card':'up-card locked';
+    document.getElementById('uc-cometauto').innerText=cometAutoOwned?s.upBought:s.upCost+' 100T PR';
+    document.getElementById('up-cometauto').className=(pts>=100e12&&!cometAutoOwned)?'up-card':'up-card locked';
 
-            let pct = (pts >= 10000000000) ? 100 : ((pts - cur.v) / (next.v - cur.v)) * 100;
-            document.getElementById('rank-bar').style.width = Math.min(100, pct) + "%";
-        }
-        
-        load();
-    </script>
+    // prestige
+    document.getElementById('btn-prestige').style.display=pts>=10e12?'block':'none';
+    document.getElementById('btn-prestige').innerText=s.prestige;
+    const pi=document.getElementById('prestige-info');
+    pi.innerText=prestigeCount>0?s.prestigeInfo+': '+prestigeCount+' | '+s.prestigeBonus+': x'+prestigeBonus.toFixed(2):'';
+
+    // rank
+    let cur=rData[0],next=rData[1],curIdx=0;
+    for(let i=0;i<rData.length;i++){if(pts>=rData[i].v){cur=rData[i];next=rData[i+1]||rData[i];curIdx=i;}}
+    if(curIdx>prevRankIdx){playRankUp();if(cur.vfx)spawnRankVFX(cur.vfx.color,cur.vfx.shape);showRankBanner(cur[l],cur.c);}
+    prevRankIdx=curIdx;
+
+    const rTxt=s.rank+' '+cur[l].toUpperCase();
+    document.getElementById('ui-rank').innerText=rTxt;
+    document.getElementById('ui-rank').style.color=cur.c;
+    document.getElementById('g-rank').innerText=rTxt;
+    document.getElementById('g-rank').style.color=cur.c;
+
+    const maxV=rData[rData.length-1].v;
+    let pct=pts>=maxV?100:((pts-cur.v)/(next.v-cur.v))*100;
+    document.getElementById('rank-bar').style.width=Math.min(100,pct)+'%';
+    document.getElementById('rank-bar').style.background=cur.c;
+    document.getElementById('rank-bar').style.boxShadow='0 0 12px '+cur.c;
+
+    updateCometTimer();
+}
+
+function changeLang(){
+    const ls=["PT","EN","ES"];
+    lang=ls[(ls.indexOf(lang)+1)%ls.length];
+    updateLang();save();
+}
+
+function updateLang(){
+    const s=strings[lang];
+    document.getElementById('m-play').innerText=s.play;
+    document.getElementById('m-ranks').innerText=s.ranks;
+    document.getElementById('m-upd').innerText=s.upd;
+    document.getElementById('m-sets').innerText=s.sets;
+    document.getElementById('m-abt').innerText=s.about;
+    document.getElementById('b-lang').innerText=s.langName;
+    document.getElementById('s-lang-label').innerText=s.langLabel;
+    document.getElementById('s-suf-label').innerText=s.sufLabel;
+    document.getElementById('s-sci-label').innerText=s.sciLabel;
+    document.getElementById('t-ranks').innerText=s.tRanks;
+    document.getElementById('t-upd').innerText=s.tUpd;
+    document.getElementById('t-sets').innerText=s.tSets;
+    document.getElementById('t-about').innerText=s.tAbout;
+    document.getElementById('t-dsc').innerText=s.tDsc;
+    document.getElementById('t-crd').innerText=s.tCrd;
+    document.getElementById('back-ranks').innerText=s.back;
+    document.getElementById('back-upd').innerText=s.back;
+    document.getElementById('back-sets').innerText=s.back;
+    document.getElementById('back-about').innerText=s.back;
+    document.getElementById('back-dsc').innerText=s.back;
+    document.getElementById('back-crd').innerText=s.back;
+    document.getElementById('btn-exit').innerText=s.exit;
+    document.getElementById('un-click').innerText=s.upNameClick;
+    document.getElementById('un-auto').innerText=s.upNameAuto;
+    document.getElementById('un-x2auto').innerText=s.upNameX2Auto;
+    document.getElementById('un-x10auto').innerText=s.upNameX10Auto;
+    document.getElementById('un-cometspd').innerText=s.upNameCometSpd;
+    document.getElementById('un-cometauto').innerText=s.upNameCometAuto;
+    document.getElementById('about-text').innerHTML=s.aboutText;
+    document.getElementById('dsc-text').innerText=s.dscText;
+    document.getElementById('crd-dev').innerText=s.devText;
+    document.getElementById('crd-design').innerText=s.designText;
+    document.getElementById('crd-tech').innerText=s.techText;
+    document.getElementById('upd-content').innerHTML=v2Block(lang)+oldBlock(lang);
+    upd();
+}
+
+function nav(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'instant'});
+}
+
+function showRanks(){
+    const l=getLang();
+    const list=document.getElementById('ranks-list');
+    list.innerHTML=rData.map(r=>`
+        <div class="row-item" style="color:${r.c}">
+            <span>${r.prestige?'⭐ ':''} ${r[l].toUpperCase()}</span>
+            <span>${formatValue(r.v)} PR</span>
+        </div>`).join('');
+    nav('scr-ranks');
+}
+
+function save(){
+    localStorage.setItem('ng_save',JSON.stringify({pts,upg,cfg,lang,prestigeCount,prestigeBonus,cometSpdLvl,cometAutoOwned}));
+}
+function load(){
+    let sv=localStorage.getItem('ng_save');
+    if(sv){
+        let d=JSON.parse(sv);
+        pts=isNaN(d.pts)?0:d.pts;
+        cfg=d.cfg||cfg;
+        lang=d.lang||"PT";
+        prestigeCount=d.prestigeCount||0;
+        prestigeBonus=d.prestigeBonus||1;
+        cometSpdLvl=d.cometSpdLvl||0;
+        cometAutoOwned=d.cometAutoOwned||false;
+        if(d.upg){for(let k in upg){if(d.upg[k]!==undefined&&!isNaN(d.upg[k]))upg[k]=d.upg[k];}}
+        updateToggles();
+    }
+    updateLang();
+    startCometCountdown();
+}
+
+load();
+</script>
 </body>
 </html>
