@@ -148,7 +148,13 @@
 
 <div id="scr-dsc" class="screen hidden" style="color:#7289da !important;">
     <h2 class="aba-titulo" id="t-dsc">DISCORD</h2>
-    <div class="neon-modal" style="border-color:currentColor;justify-content:center;"><p id="dsc-text" style="text-align:center;"></p></div>
+    <div class="neon-modal" style="border-color:currentColor;justify-content:center;align-items:center;">
+        <div style="text-align:center;flex-grow:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;">
+            <div style="font-size:3rem;">💬</div>
+            <a href="https://discord.gg/M6nQeAN9" target="_blank" style="color:#7289da;font-size:1.3rem;font-weight:900;letter-spacing:2px;text-decoration:none;border:2px solid #7289da;border-radius:15px;padding:14px 22px;box-shadow:0 0 15px #7289da;background:rgba(114,137,218,0.08);">discord.gg/M6nQeAN9</a>
+            <p id="dsc-text" style="color:#aaa;font-size:0.95rem;line-height:1.5;margin:0;"></p>
+        </div>
+    </div>
     <button class="btn-neon btn-back" id="back-dsc" onclick="nav('scr-home')">VOLTAR</button>
 </div>
 
@@ -180,19 +186,19 @@ let nextCometIn=0; // countdown seconds
 let cometCountdownTimer=null;
 
 // Comet speed upgrade costs: 1T * 1.3^n
-const COMET_SPD_BASE_COST=1e12;
+const COMET_SPD_BASE_COST=5e11;
 function getCometSpdCost(lvl){ return COMET_SPD_BASE_COST*Math.pow(1.3,lvl); }
 function getCometInterval(lvl){ return COMET_BASE_INTERVAL/Math.pow(1.3,lvl); }
 
 let upg={
-    clickLvl:1,clickCost:15,
-    autoLvl:0,autoCost:50,
-    multClick:1,x2cCost:50000,x2cOwned:false,
-    multClickOP:1,x5cCost:1000000,x5cOwned:false,
-    multClickX10:1,x10cCost:25000000,x10cOwned:false,
-    multClickX100:1,x100cCost:1000000000,x100cOwned:false,
-    multAuto:1,x2aCost:100000,x2aOwned:false,
-    multAuto10:1,x10aCost:10000000000,x10aOwned:false
+    clickLvl:1,clickCost:8,
+    autoLvl:0,autoCost:25,
+    multClick:1,x2cCost:25000,x2cOwned:false,
+    multClickOP:1,x5cCost:500000,x5cOwned:false,
+    multClickX10:1,x10cCost:12500000,x10cOwned:false,
+    multClickX100:1,x100cCost:500000000,x100cOwned:false,
+    multAuto:1,x2aCost:50000,x2aOwned:false,
+    multAuto10:1,x10aCost:5000000000,x10aOwned:false
 };
 
 // ---- RANKS ----
@@ -219,7 +225,7 @@ const rData=[
 // ---- UPDATE CONTENT ----
 function v2Block(l){
     return {
-PT:`<div class="upd-v">v2.0: Atualização gigante!</div>
+PT:`<div class="upd-v">v2.0: ATUALIZAÇÃO GIGANTE!</div>
 <div class="divider-pink"></div>
 <b class="upd-topic">• 5 novos Ranks!</b>
 <span class="upd-sub">Confira eles na aba de Ranks!</span>
@@ -228,14 +234,18 @@ PT:`<div class="upd-v">v2.0: Atualização gigante!</div>
 <b class="upd-topic">• Novos upgrades</b>
 <span class="upd-sub">x10 Ganho Passivo!</span>
 <span class="upd-sub">x5 Clicks!</span>
+<b class="upd-topic">• Upgrades mais baratos!</b>
+<span class="upd-sub">Upgrades com seu custo pela metade!</span>
+<b class="upd-topic">• Discord Server!</b>
+<span class="upd-sub">Nosso server de Discord já está disponível na aba DISCORD!</span>
 <b class="upd-topic">• Nerf Frenzy!</b>
 <span class="upd-sub">Nerfado o Frenzy (100x→50x), passando um cometa para ativá-lo, deixando por 30 segundos o Boost!</span>
 <b class="upd-topic">• Mini recodificação!</b>
 <span class="upd-sub">Pequena recodificação no jogo para arrumar bugs!</span>
-<b class="upd-topic">• Novos idiomas!</b>
-<span class="upd-sub">Adicionados os idiomas Inglês e Espanhol, confira-os na aba Configurações!</span>
+<b class="upd-topic">• Suporte pra mais idiomas!</b>
+<span class="upd-sub">Sendo eles: Francês, Alemão, Japonês, Mandarim e Árabe!</span>
 <b class="upd-topic">• Entre muitas outras coisas!</b>`,
-EN:`<div class="upd-v">v2.0: Giant update!</div>
+EN:`<div class="upd-v">v2.0: GIANT UPDATE!</div>
 <div class="divider-pink"></div>
 <b class="upd-topic">• 5 new Ranks!</b>
 <span class="upd-sub">Check them in the Ranks tab!</span>
@@ -244,14 +254,18 @@ EN:`<div class="upd-v">v2.0: Giant update!</div>
 <b class="upd-topic">• New upgrades</b>
 <span class="upd-sub">x10 Passive Income!</span>
 <span class="upd-sub">x5 Clicks!</span>
+<b class="upd-topic">• Cheaper upgrades!</b>
+<span class="upd-sub">Upgrades with their cost cut in half!</span>
+<b class="upd-topic">• Discord Server!</b>
+<span class="upd-sub">Our Discord server is now available in the DISCORD tab!</span>
 <b class="upd-topic">• Frenzy nerf!</b>
 <span class="upd-sub">Frenzy nerfed (100x→50x), a comet now triggers it, lasting 30 seconds!</span>
 <b class="upd-topic">• Mini recode!</b>
 <span class="upd-sub">Small recode to fix bugs!</span>
-<b class="upd-topic">• New languages!</b>
-<span class="upd-sub">English and Spanish added, check them in Settings!</span>
+<b class="upd-topic">• More language support!</b>
+<span class="upd-sub">Being them: French, German, Japanese, Mandarin and Arabic!</span>
 <b class="upd-topic">• And much more!</b>`,
-ES:`<div class="upd-v">v2.0: ¡Actualización gigante!</div>
+ES:`<div class="upd-v">v2.0: ¡ACTUALIZACIÓN GIGANTE!</div>
 <div class="divider-pink"></div>
 <b class="upd-topic">• ¡5 nuevos Rangos!</b>
 <span class="upd-sub">¡Consúltalos en la pestaña de Rangos!</span>
@@ -260,12 +274,16 @@ ES:`<div class="upd-v">v2.0: ¡Actualización gigante!</div>
 <b class="upd-topic">• Nuevas mejoras</b>
 <span class="upd-sub">¡x10 Ingreso Pasivo!</span>
 <span class="upd-sub">¡x5 Clics!</span>
+<b class="upd-topic">• ¡Mejoras más baratas!</b>
+<span class="upd-sub">¡Mejoras con su costo reducido a la mitad!</span>
+<b class="upd-topic">• ¡Discord Server!</b>
+<span class="upd-sub">¡Nuestro servidor de Discord ya está disponible en la pestaña DISCORD!</span>
 <b class="upd-topic">• ¡Nerf al Frenzy!</b>
 <span class="upd-sub">¡Frenzy nerfado (100x→50x), un cometa lo activa, durando 30 segundos!</span>
 <b class="upd-topic">• ¡Mini recodificación!</b>
 <span class="upd-sub">¡Pequeña recodificación para arreglar errores!</span>
-<b class="upd-topic">• ¡Nuevos idiomas!</b>
-<span class="upd-sub">¡Inglés y Español añadidos, consúltalos en Configuración!</span>
+<b class="upd-topic">• ¡Soporte para más idiomas!</b>
+<span class="upd-sub">¡Siendo ellos: Francés, Alemán, Japonés, Mandarín y Árabe!</span>
 <b class="upd-topic">• ¡Y mucho más!</b>`
     }[l];
 }
@@ -323,7 +341,7 @@ PT:{
     prestige:"⭐ PRESTÍGIO",prestigeInfo:"Prestígios",prestigeBonus:"Bônus",
     cometNext:"Próximo cometa em",cometAuto:"Auto-cometa ativo!",
     aboutText:"RANKS! é um jogo incremental focado na progressão constante. Clique, evolua seus ganhos e tente alcançar o Rank Opala!<br><br><b>PR</b> = Pontos de Rank.<br><br><b>Prestígio</b>: ao atingir 10T PR, você pode resetar e ganhar multiplicador permanente de x1.5!<br><br><b>Cometa</b>: passe o cometa a cada 5 minutos para ativar o Frenzy 50x por 30 segundos! Compre upgrades para reduzir o intervalo ou automatizar.",
-    dscText:"Servidor do Discord disponível em breve para a comunidade!",
+    dscText:"O servidor ainda está em desenvolvimento, mas já dá pra entrar e bater um papo com a comunidade!",
     devText:"Desenvolvedores: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Desenvolvido com HTML, CSS e JavaScript puro.",
     rankup:"RANK UP!"
 },
@@ -339,7 +357,7 @@ EN:{
     prestige:"⭐ PRESTIGE",prestigeInfo:"Prestiges",prestigeBonus:"Bonus",
     cometNext:"Next comet in",cometAuto:"Auto-comet active!",
     aboutText:"RANKS! is an incremental game focused on constant progression. Click, evolve your earnings and try to reach Opal Rank!<br><br><b>PR</b> = Rank Points.<br><br><b>Prestige</b>: reach 10T PR, reset and gain a permanent x1.5 multiplier!<br><br><b>Comet</b>: catch the comet every 5 minutes to activate Frenzy 50x for 30 seconds! Buy upgrades to reduce the interval or automate it.",
-    dscText:"Discord server coming soon for the community!",
+    dscText:"The server is still a work in progress, but you're welcome to join and chat with the community!",
     devText:"Developers: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Developed with pure HTML, CSS and JavaScript.",
     rankup:"RANK UP!"
 },
@@ -355,9 +373,89 @@ ES:{
     prestige:"⭐ PRESTIGIO",prestigeInfo:"Prestigios",prestigeBonus:"Bono",
     cometNext:"Próximo cometa en",cometAuto:"¡Auto-cometa activo!",
     aboutText:"¡RANKS! es un juego incremental enfocado en la progresión constante. ¡Haz clic, evoluciona tus ganancias e intenta alcanzar el Rango Ópalo!<br><br><b>PR</b> = Puntos de Rango.<br><br><b>Prestigio</b>: al llegar a 10T PR, reinicia y gana un multiplicador permanente de x1.5!<br><br><b>Cometa</b>: ¡atrapa el cometa cada 5 minutos para activar Frenzy 50x por 30 segundos! Compra mejoras para reducir el intervalo o automatizarlo.",
-    dscText:"¡El servidor de Discord llegará pronto para la comunidad!",
+    dscText:"¡El servidor todavía está en desarrollo, pero ya puedes entrar y charlar con la comunidad!",
     devText:"Desarrolladores: Arthur.py, Matts.js",designText:"Diseñador: Matts.js",techText:"Desarrollado con HTML, CSS y JavaScript puro.",
     rankup:"¡RANGO UP!"
+},
+FR:{
+    play:"JOUER",ranks:"RANGS",upd:"MISES À JOUR",sets:"PARAMÈTRES",about:"À PROPOS",discord:"DISCORD",crd:"CRÉDITS",
+    rank:"RANG:",langLabel:"Langue",sufLabel:"Suffixes",sciLabel:"Notation scientifique",
+    back:"RETOUR",exit:"QUITTER",
+    tRanks:"RANGS",tUpd:"MISES À JOUR",tSets:"PARAMÈTRES",tAbout:"À PROPOS",tDsc:"DISCORD",tCrd:"CRÉDITS",
+    langName:"Français",
+    upNameClick:"Puissance de Clic",upNameAuto:"Revenu Passif",upNameX2Auto:"x2 Revenu Passif",upNameX10Auto:"x10 Revenu Passif",
+    upNameCometSpd:"⚡ Réduire Intervalle",upNameCometAuto:"🤖 Auto-Comète",
+    upCost:"Coût:",upBought:"ACHETÉ",
+    prestige:"⭐ PRESTIGE",prestigeInfo:"Prestiges",prestigeBonus:"Bonus",
+    cometNext:"Prochaine comète dans",cometAuto:"Auto-comète active!",
+    aboutText:"RANKS! est un jeu incrémental axé sur la progression constante. Cliquez, évoluez et tentez d'atteindre le Rang Opale!<br><br><b>PR</b> = Points de Rang.<br><br><b>Prestige</b>: atteignez 10T PR, réinitialisez et gagnez un multiplicateur permanent de x1.5!<br><br><b>Comète</b>: attrapez la comète toutes les 5 minutes pour activer le Frenzy 50x pendant 30 secondes!",
+    dscText:"Le serveur est encore en développement, mais vous pouvez déjà rejoindre et discuter avec la communauté!",
+    devText:"Développeurs: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Développé avec HTML, CSS et JavaScript purs.",
+    rankup:"RANG SUPÉRIEUR!"
+},
+DE:{
+    play:"SPIELEN",ranks:"RÄNGE",upd:"UPDATES",sets:"EINSTELLUNGEN",about:"ÜBER",discord:"DISCORD",crd:"CREDITS",
+    rank:"RANG:",langLabel:"Sprache",sufLabel:"Suffixe",sciLabel:"Wissenschaftliche Notation",
+    back:"ZURÜCK",exit:"BEENDEN",
+    tRanks:"RÄNGE",tUpd:"UPDATES",tSets:"EINSTELLUNGEN",tAbout:"ÜBER",tDsc:"DISCORD",tCrd:"CREDITS",
+    langName:"Deutsch",
+    upNameClick:"Klick-Stärke",upNameAuto:"Passives Einkommen",upNameX2Auto:"x2 Passives Einkommen",upNameX10Auto:"x10 Passives Einkommen",
+    upNameCometSpd:"⚡ Intervall Verkürzen",upNameCometAuto:"🤖 Auto-Komet",
+    upCost:"Kosten:",upBought:"GEKAUFT",
+    prestige:"⭐ PRESTIGE",prestigeInfo:"Prestiges",prestigeBonus:"Bonus",
+    cometNext:"Nächster Komet in",cometAuto:"Auto-Komet aktiv!",
+    aboutText:"RANKS! ist ein inkrementelles Spiel, das auf ständigem Fortschritt basiert. Klicke, steigere deine Einnahmen und versuche den Opal-Rang zu erreichen!<br><br><b>PR</b> = Rang-Punkte.<br><br><b>Prestige</b>: Erreiche 10T PR, setze zurück und erhalte einen permanenten x1.5 Multiplikator!<br><br><b>Komet</b>: Fange den Kometen alle 5 Minuten, um Frenzy 50x für 30 Sekunden zu aktivieren!",
+    dscText:"Der Server ist noch in der Entwicklung, aber du kannst bereits beitreten und mit der Community chatten!",
+    devText:"Entwickler: Arthur.py, Matts.js",designText:"Designer: Matts.js",techText:"Entwickelt mit reinem HTML, CSS und JavaScript.",
+    rankup:"RANG AUFSTIEG!"
+},
+JA:{
+    play:"プレイ",ranks:"ランク",upd:"アップデート",sets:"設定",about:"ゲームについて",discord:"DISCORD",crd:"クレジット",
+    rank:"ランク:",langLabel:"言語",sufLabel:"サフィックス",sciLabel:"科学的表記",
+    back:"戻る",exit:"終了",
+    tRanks:"ランク",tUpd:"アップデート",tSets:"設定",tAbout:"ゲームについて",tDsc:"DISCORD",tCrd:"クレジット",
+    langName:"日本語",
+    upNameClick:"クリック力",upNameAuto:"自動収益",upNameX2Auto:"x2 自動収益",upNameX10Auto:"x10 自動収益",
+    upNameCometSpd:"⚡ 間隔短縮",upNameCometAuto:"🤖 オート彗星",
+    upCost:"コスト:",upBought:"購入済み",
+    prestige:"⭐ プレステージ",prestigeInfo:"プレステージ数",prestigeBonus:"ボーナス",
+    cometNext:"次の彗星まで",cometAuto:"オート彗星が有効!",
+    aboutText:"RANKS!は継続的な進歩に焦点を当てたインクリメンタルゲームです。クリックして収益を上げ、オパールランクを目指しましょう！<br><br><b>PR</b> = ランクポイント。<br><br><b>プレステージ</b>: 10T PRに達したらリセットして永続的なx1.5倍率を獲得！<br><br><b>彗星</b>: 5分ごとに彗星をキャッチしてFrenzy 50xを30秒間発動！",
+    dscText:"サーバーはまだ開発中ですが、参加してコミュニティとチャットできます！",
+    devText:"開発者: Arthur.py, Matts.js",designText:"デザイナー: Matts.js",techText:"純粋なHTML、CSS、JavaScriptで開発。",
+    rankup:"ランクアップ!"
+},
+ZH:{
+    play:"开始游戏",ranks:"段位",upd:"更新日志",sets:"设置",about:"关于游戏",discord:"DISCORD",crd:"制作人员",
+    rank:"段位:",langLabel:"语言",sufLabel:"数字后缀",sciLabel:"科学计数法",
+    back:"返回",exit:"退出",
+    tRanks:"段位",tUpd:"更新日志",tSets:"设置",tAbout:"关于游戏",tDsc:"DISCORD",tCrd:"制作人员",
+    langName:"中文",
+    upNameClick:"点击强化",upNameAuto:"自动收益",upNameX2Auto:"x2 自动收益",upNameX10Auto:"x10 自动收益",
+    upNameCometSpd:"⚡ 缩短间隔",upNameCometAuto:"🤖 自动彗星",
+    upCost:"费用:",upBought:"已购买",
+    prestige:"⭐ 声望重置",prestigeInfo:"声望次数",prestigeBonus:"加成",
+    cometNext:"下次彗星倒计时",cometAuto:"自动彗星已激活!",
+    aboutText:"RANKS! 是一款专注于持续进步的放置游戏。点击、提升收益，努力达到蛋白石段位！<br><br><b>PR</b> = 段位积分。<br><br><b>声望重置</b>: 达到10T PR后，可以重置游戏并获得永久x1.5倍率！<br><br><b>彗星</b>: 每5分钟抓住彗星，可激活50x狂暴模式持续30秒！",
+    dscText:"服务器仍在开发中，但你已经可以加入并与社区聊天！",
+    devText:"开发者: Arthur.py, Matts.js",designText:"设计师: Matts.js",techText:"使用纯HTML、CSS和JavaScript开发。",
+    rankup:"段位提升!"
+},
+AR:{
+    play:"العب",ranks:"الرتب",upd:"التحديثات",sets:"الإعدادات",about:"عن اللعبة",discord:"DISCORD",crd:"الاعتمادات",
+    rank:"الرتبة:",langLabel:"اللغة",sufLabel:"اللواحق",sciLabel:"الترميز العلمي",
+    back:"رجوع",exit:"خروج",
+    tRanks:"الرتب",tUpd:"التحديثات",tSets:"الإعدادات",tAbout:"عن اللعبة",tDsc:"DISCORD",tCrd:"الاعتمادات",
+    langName:"العربية",
+    upNameClick:"قوة النقر",upNameAuto:"دخل تلقائي",upNameX2Auto:"x2 دخل تلقائي",upNameX10Auto:"x10 دخل تلقائي",
+    upNameCometSpd:"⚡ تقليل الفترة",upNameCometAuto:"🤖 مذنب تلقائي",
+    upCost:"التكلفة:",upBought:"تم الشراء",
+    prestige:"⭐ المكانة",prestigeInfo:"المكانات",prestigeBonus:"المكافأة",
+    cometNext:"المذنب القادم في",cometAuto:"المذنب التلقائي نشط!",
+    aboutText:"RANKS! لعبة تراكمية تركز على التقدم المستمر. انقر، طور أرباحك وحاول الوصول إلى رتبة الأوبال!<br><br><b>PR</b> = نقاط الرتبة.<br><br><b>المكانة</b>: عند الوصول إلى 10T PR، أعد تعيين اللعبة واحصل على مضاعف دائم x1.5!<br><br><b>المذنب</b>: امسك المذنب كل 5 دقائق لتفعيل وضع Frenzy 50x لمدة 30 ثانية!",
+    dscText:"السيرفر لا يزال قيد التطوير، لكن يمكنك الانضمام والتحدث مع المجتمع!",
+    devText:"المطورون: Arthur.py, Matts.js",designText:"المصمم: Matts.js",techText:"تم تطويره باستخدام HTML وCSS وJavaScript.",
+    rankup:"ترقية الرتبة!"
 }
 };
 
@@ -475,7 +573,7 @@ function showRankBanner(name,color){
 }
 
 // ---- CORE GAME ----
-function getLang(){return lang==="PT"?"pt":lang==="EN"?"en":"es";}
+function getLang(){return lang==="PT"?"pt":lang==="ES"?"es":"en";}
 
 function add(e){
     playClick();
@@ -510,7 +608,7 @@ function buyUpgrade(type){
         if(pts>=cost){pts-=cost;cometSpdLvl++;startCometCountdown();bought=true;}
     }
     else if(type==='cometauto'&&!cometAutoOwned){
-        const cost=100e12;
+        const cost=50e12;
         if(pts>=cost){pts-=cost;cometAutoOwned=true;bought=true;}
     }
     if(bought) playBuy();
@@ -522,7 +620,7 @@ function doPrestige(){
     if(!confirm('Prestígio? Você perderá todos os pontos e upgrades, mas ganhará x1.5 permanente!')) return;
     playPrestige();
     pts=0;prestigeCount++;prestigeBonus=Math.pow(1.5,prestigeCount);
-    upg={clickLvl:1,clickCost:15,autoLvl:0,autoCost:50,multClick:1,x2cCost:50000,x2cOwned:false,multClickOP:1,x5cCost:1000000,x5cOwned:false,multClickX10:1,x10cCost:25000000,x10cOwned:false,multClickX100:1,x100cCost:1000000000,x100cOwned:false,multAuto:1,x2aCost:100000,x2aOwned:false,multAuto10:1,x10aCost:10000000000,x10aOwned:false};
+    upg={clickLvl:1,clickCost:8,autoLvl:0,autoCost:25,multClick:1,x2cCost:25000,x2cOwned:false,multClickOP:1,x5cCost:500000,x5cOwned:false,multClickX10:1,x10cCost:12500000,x10cOwned:false,multClickX100:1,x100cCost:500000000,x100cOwned:false,multAuto:1,x2aCost:50000,x2aOwned:false,multAuto10:1,x10aCost:5000000000,x10aOwned:false};
     upd();save();
 }
 
@@ -572,17 +670,17 @@ function upd(){
     document.getElementById('uc-auto').innerText=s.upCost+' '+formatValue(upg.autoCost)+' PR';
     document.getElementById('up-click').className=pts>=upg.clickCost?'up-card':'up-card locked';
     document.getElementById('up-auto').className=pts>=upg.autoCost?'up-card':'up-card locked';
-    document.getElementById('uc-x2click').innerText=upg.x2cOwned?s.upBought:s.upCost+' 50k PR';
+    document.getElementById('uc-x2click').innerText=upg.x2cOwned?s.upBought:s.upCost+' 25k PR';
     document.getElementById('up-x2click').className=(pts>=upg.x2cCost&&!upg.x2cOwned)?'up-card':'up-card locked';
-    document.getElementById('uc-x5click').innerText=upg.x5cOwned?s.upBought:s.upCost+' 1M PR';
+    document.getElementById('uc-x5click').innerText=upg.x5cOwned?s.upBought:s.upCost+' 500k PR';
     document.getElementById('up-x5click').className=(pts>=upg.x5cCost&&!upg.x5cOwned)?'up-card':'up-card locked';
-    document.getElementById('uc-x10click').innerText=upg.x10cOwned?s.upBought:s.upCost+' 25M PR';
+    document.getElementById('uc-x10click').innerText=upg.x10cOwned?s.upBought:s.upCost+' 12.5M PR';
     document.getElementById('up-x10click').className=(pts>=upg.x10cCost&&!upg.x10cOwned)?'up-card':'up-card locked';
-    document.getElementById('uc-x100click').innerText=upg.x100cOwned?s.upBought:s.upCost+' 1B PR';
+    document.getElementById('uc-x100click').innerText=upg.x100cOwned?s.upBought:s.upCost+' 500M PR';
     document.getElementById('up-x100click').className=(pts>=upg.x100cCost&&!upg.x100cOwned)?'up-card':'up-card locked';
-    document.getElementById('uc-x2auto').innerText=upg.x2aOwned?s.upBought:s.upCost+' 100k PR';
+    document.getElementById('uc-x2auto').innerText=upg.x2aOwned?s.upBought:s.upCost+' 50k PR';
     document.getElementById('up-x2auto').className=(pts>=upg.x2aCost&&!upg.x2aOwned)?'up-card':'up-card locked';
-    document.getElementById('uc-x10auto').innerText=upg.x10aOwned?s.upBought:s.upCost+' 10B PR';
+    document.getElementById('uc-x10auto').innerText=upg.x10aOwned?s.upBought:s.upCost+' 5B PR';
     document.getElementById('up-x10auto').className=(pts>=upg.x10aCost&&!upg.x10aOwned)?'up-card':'up-card locked';
 
     // comet upgrades
@@ -590,8 +688,8 @@ function upd(){
     const intervalNow=Math.round(getCometInterval(cometSpdLvl));
     document.getElementById('uc-cometspd').innerText=s.upCost+' '+formatValue(cometCost)+' PR (Nv.'+cometSpdLvl+' → '+(intervalNow<60?intervalNow+'s':Math.round(intervalNow/60)+'m')+')';
     document.getElementById('up-cometspd').className=pts>=cometCost?'up-card':'up-card locked';
-    document.getElementById('uc-cometauto').innerText=cometAutoOwned?s.upBought:s.upCost+' 100T PR';
-    document.getElementById('up-cometauto').className=(pts>=100e12&&!cometAutoOwned)?'up-card':'up-card locked';
+    document.getElementById('uc-cometauto').innerText=cometAutoOwned?s.upBought:s.upCost+' 50T PR';
+    document.getElementById('up-cometauto').className=(pts>=50e12&&!cometAutoOwned)?'up-card':'up-card locked';
 
     // prestige
     document.getElementById('btn-prestige').style.display=pts>=10e12?'block':'none';
@@ -621,13 +719,15 @@ function upd(){
 }
 
 function changeLang(){
-    const ls=["PT","EN","ES"];
+    const ls=["PT","EN","ES","FR","DE","JA","ZH","AR"];
     lang=ls[(ls.indexOf(lang)+1)%ls.length];
     updateLang();save();
 }
 
 function updateLang(){
     const s=strings[lang];
+    // RTL support for Arabic
+    document.documentElement.dir = lang==="AR" ? "rtl" : "ltr";
     document.getElementById('m-play').innerText=s.play;
     document.getElementById('m-ranks').innerText=s.ranks;
     document.getElementById('m-upd').innerText=s.upd;
@@ -691,7 +791,7 @@ function load(){
         let d=JSON.parse(sv);
         pts=isNaN(d.pts)?0:d.pts;
         cfg=d.cfg||cfg;
-        lang=d.lang||"PT";
+        lang=["PT","EN","ES","FR","DE","JA","ZH","AR"].includes(d.lang)?d.lang:"PT";
         prestigeCount=d.prestigeCount||0;
         prestigeBonus=d.prestigeBonus||1;
         cometSpdLvl=d.cometSpdLvl||0;
